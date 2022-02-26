@@ -10,7 +10,7 @@
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <title>SignUp</title>
+    <title>SignIn</title>
 </head>
 
 <body>
@@ -19,28 +19,28 @@
         <div class="col-md-3 register-left">
             <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt=""/>
             <h3>Welcome</h3>
-            <p>If you already has an account, just sign in.</p>
-            <!--            <input type="submit" name="" value="Login"/><br/>-->
-            <a href="/signin" class="signin-signup-btn" role="button" aria-disabled="true">Signin</a>
-
+            <p>If you don't have an account, just sign up.</p>
+            <a href="/signup" class="signin-signup-btn" role="button" aria-disabled="true">Signup</a>
+            <br/>
         </div>
         <div class="col-md-9 register-right">
 
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                    <h3 class="register-heading">Sign Up</h3>
+                    <h3 class="register-heading">Sign In</h3>
                     <div class="register-form">
                         <div class="form-group">
-                            <form class="formc" action="" method="post">
+                            <form class="formc" action="/log-in/" method="post">
                                 {% csrf_token %}
-                                {{user_form.as_p}}
-                                {{extended_user_form.as_p}}
-                                <button type="button" class="btn btn-success btn-save me-1" id="signupbtn"> Save
+                                {{user_signin_form.as_p}}
+                                <button type="submit" class="btn btn-success btn-save mt-3" id="signinbtn"> Signin
                                 </button>
                             </form>
-                            <h5 id="messageDiv" style="display: none;" class="text-center message-show">Account has
-                                created successfully</h5>
-
+                            {% for message in messages %}
+                            <!--                            <h5 id="messageDiv" style="display: none;" class="text-center message-show">Account has-->
+                            <!--                                created successfully</h5>-->
+                            <h5 id="messageDiv" class="text-center message-show">{{ message }}</h5>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
@@ -49,7 +49,7 @@
     </div>
 
 </div>
-{% include "myapp/signupjs.html" %}
+{% include "myapp/signinjs.html" %}
 </body>
 
 </html>

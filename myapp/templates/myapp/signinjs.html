@@ -1,0 +1,34 @@
+<!-- <script>
+    $("#signinbtn").click(function () {
+        username = $("#usernameid").val()
+        password = $("#passwordid").val()
+
+
+        console.log(username, password)
+        if (username === "") {
+            alert("Please Enter username")
+        } else if (password === "") {
+            alert("Please Enter password")
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'log-in' %}",
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+
+                    "username": username,
+                    "password": password,
+                },
+                success: function (signin_response) {
+                    console.log(signin_response)
+                    console.log(signin_response.status)
+                    $("#messageDiv").show()
+                    $("#messageDiv").empty().text(signin_response.message)
+
+                }
+            })
+        }
+    })
+
+</script> -->

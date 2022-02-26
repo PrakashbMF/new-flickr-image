@@ -7,18 +7,19 @@ from django.dispatch import receiver
 
 
 class ExtendedUser(models.Model):
-    phone = models.IntegerField(null=True)
+    phone = models.CharField(max_length=10, null=True)
     age = models.IntegerField(null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    @receiver(post_save, sender=User)
-    def create_user_profile(sender, instance, created, **kwargs):
-        if created:
-            ExtendedUser.objects.create(user=instance)
+    # @receiver(post_save, sender=User)
+    # def create_user_profile(sender, instance, created, **kwargs):
+    #     if created:
+    #         ExtendedUser.objects.create(user=instance)
+    #
+    # @receiver(post_save, sender=User)
+    # def save_user_profile(sender, instance, **kwargs):
+    #     instance.extendedUser.save()
 
-    @receiver(post_save, sender=User)
-    def save_user_profile(sender, instance, **kwargs):
-        instance.extendedUser.save()
 
 
 class Location(models.Model):
