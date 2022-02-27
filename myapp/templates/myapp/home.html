@@ -6,19 +6,258 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <link rel='stylesheet' href='https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'>
+
     <title>Home</title>
 </head>
 <body>
-<h1>Welcome {{ name }}</h1>
+<!--<h1>Welcome {{ name }}</h1>-->
+<!--<button type="submit"><a href="/signout">SignOut</a></button>-->
+<div><input type="hidden" id="userIdId" name="userIdName" value="{{ user_id }}"></div>
+<div><input type="hidden" id="pageNumber" name="pageNumber" value="{{page}}"></div>
 
-<button type="submit"><a href="/signout">SignOut</a></button>
+<div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/home">Welcome {{name}}</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
+                    aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Fovourites</a>
+                    </li>
+
+                </ul>
+                <select class="form-select mt-2 px-2 select-box" id="selectMain" aria-label="Default select example">
+                    <option id="default" value="0" selected>Please choose one option</option>
+                    <option id="selectLocation" value="1">Location</option>
+                    <option id="selectLatLong" value="2">Latitude Longitude</option>
+                </select>
+
+                <button class="btn btn-secondary mt-2 me-1" type="button" id="back">Back</button>
+
+                <div id="latLongFormMainDiv">
+                    <form class="d-flex mt-2" id="latLongForm" for="latLongSearch">
+
+                        <input class="form-control me-1" type="text" name="latitudeSearch" id="latitudeSearch" value=""
+                               placeholder="latitude Search" aria-label="Search" required>
+                        <input class="form-control me-1" type="text" name="longitudeSearch" id="longitudeSearch"
+                               value=""
+                               placeholder="longitude Search" aria-label="Search" required>
+
+                        <button id="latLongSearchButton" class="btn btn-outline-success me-1" type="button">Search
+                        </button>
+                    </form>
+
+                </div>
+                <div id="locationFormMainDiv">
+                    <form class="d-flex mt-2" id="LocationForm" for="locationSearch">
+
+                        <input class="form-control me-1" type="text" name="search" id="locationSearch" value=""
+                               placeholder="Location Search" aria-label="Search" required>
+                        <button id="searchButton" class="btn btn-outline-success me-1" type="button">Search</button>
+                    </form>
+
+                </div>
+                <button type="button" class="btn btn-outline-danger mx-2 mt-2 me-1"><a href="/signout">SignOut</a>
+                </button>
+
+            </div>
+        </div>
+    </nav>
+</div>
+<div id="extraImageDataMainDiv">
+    <div class="portfolio px-5" id="imageDataMainDiv">
+        <a href="#" class="card mt-3 mb-3" id="imageDataIterDiv">
+            <div class="content text-center mt-4">
+                <button id="likedButton" bttn-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"
+                        class="likedFavButton buttonFirst">
+                    <i id="likedId" icon-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"
+                       class="iconFirst fa fa-thumbs-up like-size "></i>
+                </button>
+
+            </div>
+            <div id="imageurl" class="image">
+                <img src="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg" alt=""/>
+            </div>
+        </a>
+        <a href="#" class="card mt-3 mb-3" id="imageDataIterDiv1">
+            <div class="content text-center mt-4">
+                <button id="likedButton1" bttn-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"
+                        class="likedFavButton buttonFirst">
+                    <i id="likedId1" icon-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"
+                       class="iconFirst fa fa-thumbs-up like-size "></i>
+                </button>
+
+            </div>
+            <div id="imageurl1" class="image">
+                <img src="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg" alt=""/>
+            </div>
+        </a>
+        <a href="#" class="card mt-3 mb-3" id="imageDataIterDiv2">
+            <div class="content text-center mt-4">
+                <button id="likedButton2" bttn-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"
+                        class="likedFavButton buttonFirst">
+                    <i id="likedId2" icon-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"
+                       class="iconFirst fa fa-thumbs-up like-size "></i>
+                </button>
+            </div>
+            <div id="imageurl2" class="image">
+                <img src="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg" alt=""/>
+            </div>
+        </a>
+        <a href="#" class="card mt-3 mb-3" id="imageDataIterDiv3">
+            <div class="content text-center mt-4">
+                <button id="likedButton3" bttn-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"
+                        class="likedFavButton buttonFirst">
+                    <i id="likedId3" icon-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"
+                       class="iconFirst fa fa-thumbs-up like-size "></i>
+                </button>
+            </div>
+            <div id="imageurl3" class="image">
+                <img src="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg" alt=""/>
+            </div>
+        </a>
+        <a href="#" class="card mt-3 mb-3" id="imageDataIterDiv4">
+            <div class="content text-center mt-4">
+                <button id="likedButton4" bttn-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"
+                        class="likedFavButton buttonFirst">
+                    <i id="likedId4" icon-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"
+                       class="iconFirst fa fa-thumbs-up like-size "></i>
+                </button>
+            </div>
+            <div id="imageurl4" class="image">
+                <img src="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg" alt=""/>
+            </div>
+        </a>
+
+    </div>
+</div>
+<div class="center abc mt-4 mb-4">
+    <button style="display:none;" id="previousButton" class="btn btn-outline-success me-1" type="button"> Previous
+    </button>
+    <button id="nextButton" class="btn btn-outline-success me-1" type="button"> Next</button>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
+<!--=======================================Form modal manage=====================-->
+<script>
+        $(function () {
+            $("#latLongFormMainDiv").hide();
+            $("#locationFormMainDiv").hide();
+            $("#back").hide();
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+<script>
+        $(function () {
+            $("#selectMain").on("change", function () {
+<!--                console.log("value : ", this.value)-->
+                if (this.value === "1") {
+<!--                    console.log("Your are in 1 block")-->
+
+                    $("#selectMain").hide();
+                    $("#locationFormMainDiv").show();
+                    $("#back").show();
+                }
+
+                else if (this.value === "2") {
+<!--                    console.log("Your are in 2 block")-->
+
+                    $("#selectMain").hide();
+                    $("#latLongFormMainDiv").show();
+                    $("#back").show();
+                }
+                else {
+<!--                    console.log("Your are in else block")-->
+
+                    $("#back").hide();
+                    $("#selectMain").show();
+                    $("#latLongFormMainDiv").hide();
+                    $("#locationFormMainDiv").hide();
+                }
+            });
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+<script>
+        $(function () {
+            $("#back").click(function () {
+                $("#back").hide();
+                $("#selectMain").show();
+                $("#latLongFormMainDiv").hide();
+                $("#locationFormMainDiv").hide();
+
+            });
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+<!--=======================================Form modal manage=====================-->
 {% include "myapp/signinjs.html" %}
 </body>
 </html>

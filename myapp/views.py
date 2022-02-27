@@ -10,7 +10,7 @@ from myapp.forms import UserForm, ExtendedUserForm, UserSigninForm
 #
 from myapp.models import Location
 from myapp.services.flick_api import FlickrData
-from myapp.services.service import LocationService, FavouriteImageService
+from myapp.services.service import LocationService, FavouriteImageService, GeoLocation
 
 
 def signup(request):
@@ -22,6 +22,15 @@ def signup(request):
     # return render(request, "myapp/signupsignin.html",
     return render(request, "myapp/signup.html",
                   {"user_form": user_form, "extended_user_form": extended_user_form})
+
+
+def welcome(request):
+    """
+           Render to Home page for testing
+    """
+
+    # return render(request, "myapp/signupsignin.html",
+    return render(request, "myapp/home.html")
 
 
 def signin(request):
@@ -76,7 +85,7 @@ def signin(request):
         #         messages.error(request, "Bad Credentials!!")
         #         return redirect('signin')
         # except User.DoesNotExist:
-        #     print("your are in except")
+        #     print("your are in except")request
         #
         #     # return Response({"status": 0, "message": "Failed"})
         #     messages.error(request, "Bad Credentials!!")
@@ -166,9 +175,11 @@ def home(request):
     print("you are in home")
     # print("request.user", request.user)
     name = request.user
-    # print("name", name)
+    user_id = request.user.id
+
+    # print("user_id", user_id)
     # return render(request, "myapp/home.html")
-    return render(request, "myapp/home.html", {"name": name})
+    return render(request, "myapp/home.html", {"name": name, "user_id": user_id})
 
 
 class LocationList(APIView):
@@ -214,6 +225,26 @@ class InsertLocation(APIView):
         return Response({"status": 200, "name": response})
 
 
+class GeoLocationFromLatLong(APIView):
+    """
+           Return location name by longitude and latitude
+
+            method type : get
+            Param : latitude, longitude
+            Return : location_name
+            Rtype : json response
+
+    """
+
+    def get(self, request):
+        latitude = request.data["latitude"]
+        longitude = request.data["longitude"]
+        geo_location_service = GeoLocation()
+        location_name = geo_location_service.getGeoLocation(latitude, longitude)
+        # print("location_name", location_name)
+        return Response({"location_name": location_name})
+
+
 class LikeUnlike(APIView):
     """
            Return response status for like and unlike
@@ -251,6 +282,7 @@ class FavouriteImages(APIView):
      """
 
     def get(self, request, user_id):
+        # user_id = request.user.id
         favourite_service = FavouriteImageService()
         favourite_images = favourite_service.get_favourites(user_id)
         return Response(favourite_images)

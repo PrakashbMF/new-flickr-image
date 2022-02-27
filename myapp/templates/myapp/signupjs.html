@@ -1,0 +1,51 @@
+<script>
+    $("#signupbtn").click(function () {
+        first_name = $("#firstnameid").val()
+        last_name = $("#lastnameid").val()
+        email = $("#emailid").val()
+        username = $("#usernameid").val()
+        password = $("#passwordid").val()
+        age = $("#ageid").val()
+        phone = $("#phoneid").val()
+
+        console.log(first_name, last_name, username, email, password, age, phone)
+        if (name === "") {
+            alert("Please Enter name")
+        } else if (username === "") {
+            alert("Please Enter username")
+
+        }
+        else if (email === "") {
+            alert("Please Enter email")
+
+        }
+        else if ((password === "")) {
+            alert("Please Enter Password")
+
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'create-user' %}",
+                data: {
+                    // csrfmiddlewaretoken: '{{ csrf_token }}',
+                    "first_name": first_name,
+                    "last_name": last_name,
+                    "username": username,
+                    "email": email,
+                    "password": password,
+                    "age": age,
+                    "phone": phone,
+                },
+                success: function (signup_response) {
+                    console.log(signup_response)
+                    console.log(signup_response.message)
+
+                    // $("#messageDiv").css('visibility','visible')
+                    $("#messageDiv").show()
+                    $("#messageDiv").empty().text(signup_response.message)
+                }
+            })
+        }
+    })
+</script>

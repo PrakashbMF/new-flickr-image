@@ -84,7 +84,7 @@ Create a Superuser to check Database by providing username,email(optional),passw
     │  ├── static
     │  │  ├── myapp
     │  │  │  ├── style.css
-    │  │  │  └── welcomeStyle.css
+    │  │  │  └── homeStyle.css
     │  ├── template
     │  │  ├── myapp
     │  │  │  ├── favourites.html
