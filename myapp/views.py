@@ -1,20 +1,15 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
-
 # Create your views here.
-from django.template.loader import render_to_string
-from rest_framework import permissions
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from myapp.data_serializer import LocationSerializer, FavouriteSerializer
 from myapp.forms import UserForm, ExtendedUserForm, UserSigninForm
-
 #
 from myapp.models import Location
+from myapp.services.flick_api import FlickrData
 from myapp.services.service import LocationService, FavouriteImageService
 
 
@@ -31,7 +26,8 @@ def signup(request):
 
 def signin(request):
     """
-           Render to Signup page
+            return to home page if login success
+             else return to signin page
     """
     # user_signin_form = UserSigninForm()
     # return render(request, "myapp/signupsignin.html",
@@ -175,9 +171,6 @@ def home(request):
     return render(request, "myapp/home.html", {"name": name})
 
 
-from django.views.decorators.csrf import csrf_exempt
-
-
 class LocationList(APIView):
     """
            Return Location list present in database with given term
@@ -185,7 +178,7 @@ class LocationList(APIView):
             method type : get
             Param : term
             Return : [location name]
-            Rtype : json response
+            Rtype : Response
 
     """
 
@@ -203,19 +196,18 @@ class InsertLocation(APIView):
             method type : post
             Param : location_name
             Return : status
-            Rtype : json response
+            Rtype : Response
 
     """
 
-    def post(self, request, name):
+    def post(self, request):
         # serializer_data = LocationSerializer(data=request.data)
         # if serializer_data.is_valid():
-        #     # print("new name : ",serializer_data.data["name"])
         #     name = serializer_data.data["name"]
         #     location_service = LocationService()
         #     response = location_service.insert_location(name)
         #     return Response({"status": 200, "name": response})
-
+        name = request.data["location_name"]
         print("new name : ", name)
         location_service = LocationService()
         response = location_service.insert_location(name)
@@ -229,22 +221,65 @@ class LikeUnlike(APIView):
             method type : post
             Param : image_url
             Return : status
-            Rtype : json response
+            Rtype : Response
 
     """
 
-    # def post(self, request, image_url):
     def post(self, request):
         image_url = request.data["image_url"]
-        print("new image_url : ", image_url)
-
+        # print("new image_url : ", image_url)
+        # user = request.user
+        # print("User : ", user)
+        # user_object = User.objects.filter(username__iexact=user)
+        # print("user_object :", user_object)
         user_id = request.data["user_id"]
-        print("new user_id  : ", user_id)
+        # print("new user_id  : ", user_id)
         fav_image_service = FavouriteImageService()
         response = fav_image_service.insert_delete_image(user_id, image_url)
-        print("return response : ", response)
-        print("return response : ", response.status_code)
+        # print("return response : ", response)
+        # print("return response : ", response.status_code)
         return Response({"status": response.status_code})
+
+
+class FavouriteImages(APIView):
+    """
+            Return Favourite images for given user
+
+            Param : user_id
+            Return : Image_url List
+            Rtype : Response
+     """
+
+    def get(self, request, user_id):
+        favourite_service = FavouriteImageService()
+        favourite_images = favourite_service.get_favourites(user_id)
+        return Response(favourite_images)
+
+
+class SearchImages(APIView):
+    """
+           Return search Images by location name with page ,if page number given
+           otherwise page number 1
+
+            method type : get
+            Param : location_name, page_number
+            Return : images, page, total_pages, favourite_images
+            Rtype : json responseFavouriteImageService
+
+    """
+
+    def get(self, request):
+        # user_id = request.session.get('id')
+        # print("user_id", user_id)
+        location_name = request.data['location_name']
+        page_number = request.data['page_number']
+        print(location_name, page_number)
+        print("***************************************")
+        print(request.data['location_name'] is None)
+        flickr_service = FlickrData()
+        image_data, page, total_pages = flickr_service.searchImageData(page_number, location_name)
+
+        return Response({"imageData": image_data, "page": page, "total_pages": total_pages})
 
 
 def signout(request):

@@ -34,20 +34,19 @@ class FavouriteImageService:
         user = User.objects.get(id=user_id)
         favourite_images = list(
             user.favourite_set.all().order_by("-genDate").values_list("image_url", flat=True))
-        # favourite_images = [x.image_url for x in favourite_images_object]
         # favourite_images = ["https://live.staticflickr.com/65535/51096421190_667cbc0912_o.jpg",
         #                     "https://live.staticflickr.com/65535/51095616791_399ce1dbfa_o.jpg"]
         # favourite_images = []
         return favourite_images
 
     def insert_delete_image(self, user_id, image_url):
-        print("user id in service : ", user_id)
-        print("image_url in service : ", image_url)
+        # print("user id in service : ", user_id)
+        # print("image_url in service : ", image_url)
         gen_date = timezone.now()
         fav_images = self.get_favourites(user_id)
-        print("fav_images :", fav_images)
+        # print("fav_images :", fav_images)
         user = User.objects.get(pk=user_id)
-        print("user :", user)
+        # print("user :", user)
 
         if image_url in fav_images:
             print("you are in if *******************************************")
