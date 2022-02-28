@@ -38,12 +38,22 @@
                             <form class="formc" action="" method="post">
                                 {% csrf_token %}
                                 {{user_form.as_p}}
-                                {{extended_user_form.as_p}}
                                 <button type="button" class="btn btn-success btn-save me-1" id="signupbtn"> Save
                                 </button>
                             </form>
-                            <h5 id="messageDiv" style="display: none;" class="text-center message-show">Account has
-                                created successfully</h5>
+                            <h5 id="messageDiv" style="display: none;" class="text-center message-show"></h5>
+                            <!--                            <h5 class="text-center message-show">-->
+                            <!--                                -->
+                            <!--                            </h5>-->
+<!--                            {% if form.errors %}-->
+<!--                            {% for field in form %}-->
+<!--                            {% for error in field.errors %}-->
+<!--                            <div class="alert alert-danger">-->
+<!--                                <strong>{{ error|escape }}</strong>-->
+<!--                            </div>-->
+<!--                            {% endfor %}-->
+<!--                            {% endfor %}-->
+<!--                            {% endif %}-->
 
                         </div>
                     </div>

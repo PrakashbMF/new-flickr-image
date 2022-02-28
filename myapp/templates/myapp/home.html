@@ -21,7 +21,7 @@
 <!--<button type="submit"><a href="/signout">SignOut</a></button>-->
 <div><input type="hidden" id="userIdId" name="userIdName" value="{{ user_id }}"></div>
 <div><input type="hidden" id="pageNumber" name="pageNumber" value="{{page}}"></div>
-
+{% if user.is_authenticated %}
 <div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -36,7 +36,7 @@
                         <a class="nav-link active" aria-current="page" href="#">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Fovourites</a>
+                        <a id="favImageId" class="nav-link" href="#">Fovourites</a>
                     </li>
 
                 </ul>
@@ -49,8 +49,7 @@
                 <button class="btn btn-secondary mt-2 me-1" type="button" id="back">Back</button>
 
                 <div id="latLongFormMainDiv">
-                    <form class="d-flex mt-2" id="latLongForm" for="latLongSearch">
-
+                    <div class="d-flex mt-2" id="latLongForm" for="latLongSearch">
                         <input class="form-control me-1" type="text" name="latitudeSearch" id="latitudeSearch" value=""
                                placeholder="latitude Search" aria-label="Search" required>
                         <input class="form-control me-1" type="text" name="longitudeSearch" id="longitudeSearch"
@@ -59,17 +58,16 @@
 
                         <button id="latLongSearchButton" class="btn btn-outline-success me-1" type="button">Search
                         </button>
-                    </form>
-
+                    </div>
                 </div>
                 <div id="locationFormMainDiv">
-                    <form class="d-flex mt-2" id="LocationForm" for="locationSearch">
-
-                        <input class="form-control me-1" type="text" name="search" id="locationSearch" value=""
+                    <!--                    <form class="d-flex mt-2" id="LocationForm" for="locationSearch">-->
+                    <div class="d-flex mt-2" id="LocationForm" for="locationSearch">
+                        <input class=" form-control me-1" type="text" name="search" id="locationSearch" value=""
                                placeholder="Location Search" aria-label="Search" required>
                         <button id="searchButton" class="btn btn-outline-success me-1" type="button">Search</button>
-                    </form>
-
+                        <!--                    </form>-->
+                    </div>
                 </div>
                 <button type="button" class="btn btn-outline-danger mx-2 mt-2 me-1"><a href="/signout">SignOut</a>
                 </button>
@@ -78,186 +76,112 @@
         </div>
     </nav>
 </div>
+
+<!--<div id="extraImageDataMainDiv">-->
+<!--    {{name}}-->
+<!--    {{user_id}}-->
+<!--    {{page}}-->
+<!--    {{total_pages}}-->
+<!--</div>-->
+
 <div id="extraImageDataMainDiv">
     <div class="portfolio px-5" id="imageDataMainDiv">
+        {% for image_url in image_data %}
         <a href="#" class="card mt-3 mb-3" id="imageDataIterDiv">
             <div class="content text-center mt-4">
-                <button id="likedButton" bttn-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"
+                <button id="likedButton" bttn-att="{{image_url}}"
                         class="likedFavButton buttonFirst">
-                    <i id="likedId" icon-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"
+                    <i id="likedId" icon-att="{{image_url}}"
                        class="iconFirst fa fa-thumbs-up like-size "></i>
                 </button>
 
             </div>
             <div id="imageurl" class="image">
-                <img src="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg" alt=""/>
+                <img src="{{image_url}}" alt=""/>
             </div>
         </a>
-        <a href="#" class="card mt-3 mb-3" id="imageDataIterDiv1">
-            <div class="content text-center mt-4">
-                <button id="likedButton1" bttn-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"
-                        class="likedFavButton buttonFirst">
-                    <i id="likedId1" icon-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"
-                       class="iconFirst fa fa-thumbs-up like-size "></i>
-                </button>
-
-            </div>
-            <div id="imageurl1" class="image">
-                <img src="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg" alt=""/>
-            </div>
-        </a>
-        <a href="#" class="card mt-3 mb-3" id="imageDataIterDiv2">
-            <div class="content text-center mt-4">
-                <button id="likedButton2" bttn-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"
-                        class="likedFavButton buttonFirst">
-                    <i id="likedId2" icon-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"
-                       class="iconFirst fa fa-thumbs-up like-size "></i>
-                </button>
-            </div>
-            <div id="imageurl2" class="image">
-                <img src="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg" alt=""/>
-            </div>
-        </a>
-        <a href="#" class="card mt-3 mb-3" id="imageDataIterDiv3">
-            <div class="content text-center mt-4">
-                <button id="likedButton3" bttn-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"
-                        class="likedFavButton buttonFirst">
-                    <i id="likedId3" icon-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"
-                       class="iconFirst fa fa-thumbs-up like-size "></i>
-                </button>
-            </div>
-            <div id="imageurl3" class="image">
-                <img src="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg" alt=""/>
-            </div>
-        </a>
-        <a href="#" class="card mt-3 mb-3" id="imageDataIterDiv4">
-            <div class="content text-center mt-4">
-                <button id="likedButton4" bttn-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"
-                        class="likedFavButton buttonFirst">
-                    <i id="likedId4" icon-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"
-                       class="iconFirst fa fa-thumbs-up like-size "></i>
-                </button>
-            </div>
-            <div id="imageurl4" class="image">
-                <img src="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg" alt=""/>
-            </div>
-        </a>
+        {% endfor %}
 
     </div>
 </div>
+<!--<div>-->
+<!--    <div class="portfolio px-5" id="imageDataMainDiv">-->
+<!--        <a href="#" class="card mt-3 mb-3" id="imageDataIterDiv">-->
+<!--            <div class="content text-center mt-4">-->
+<!--                <button id="likedButton" bttn-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"-->
+<!--                        class="likedFavButton buttonFirst">-->
+<!--                    <i id="likedId" icon-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"-->
+<!--                       class="iconFirst fa fa-thumbs-up like-size "></i>-->
+<!--                </button>-->
+
+<!--            </div>-->
+<!--            <div id="imageurl" class="image">-->
+<!--                <img src="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg" alt=""/>-->
+<!--            </div>-->
+<!--        </a>-->
+<!--        <a href="#" class="card mt-3 mb-3" id="imageDataIterDiv1">-->
+<!--            <div class="content text-center mt-4">-->
+<!--                <button id="likedButton1" bttn-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"-->
+<!--                        class="likedFavButton buttonFirst">-->
+<!--                    <i id="likedId1" icon-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"-->
+<!--                       class="iconFirst fa fa-thumbs-up like-size "></i>-->
+<!--                </button>-->
+
+<!--            </div>-->
+<!--            <div id="imageurl1" class="image">-->
+<!--                <img src="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg" alt=""/>-->
+<!--            </div>-->
+<!--        </a>-->
+<!--        <a href="#" class="card mt-3 mb-3" id="imageDataIterDiv2">-->
+<!--            <div class="content text-center mt-4">-->
+<!--                <button id="likedButton2" bttn-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"-->
+<!--                        class="likedFavButton buttonFirst">-->
+<!--                    <i id="likedId2" icon-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"-->
+<!--                       class="iconFirst fa fa-thumbs-up like-size "></i>-->
+<!--                </button>-->
+<!--            </div>-->
+<!--            <div id="imageurl2" class="image">-->
+<!--                <img src="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg" alt=""/>-->
+<!--            </div>-->
+<!--        </a>-->
+<!--        <a href="#" class="card mt-3 mb-3" id="imageDataIterDiv3">-->
+<!--            <div class="content text-center mt-4">-->
+<!--                <button id="likedButton3" bttn-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"-->
+<!--                        class="likedFavButton buttonFirst">-->
+<!--                    <i id="likedId3" icon-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"-->
+<!--                       class="iconFirst fa fa-thumbs-up like-size "></i>-->
+<!--                </button>-->
+<!--            </div>-->
+<!--            <div id="imageurl3" class="image">-->
+<!--                <img src="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg" alt=""/>-->
+<!--            </div>-->
+<!--        </a>-->
+<!--        <a href="#" class="card mt-3 mb-3" id="imageDataIterDiv4">-->
+<!--            <div class="content text-center mt-4">-->
+<!--                <button id="likedButton4" bttn-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"-->
+<!--                        class="likedFavButton buttonFirst">-->
+<!--                    <i id="likedId4" icon-att="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg"-->
+<!--                       class="iconFirst fa fa-thumbs-up like-size "></i>-->
+<!--                </button>-->
+<!--            </div>-->
+<!--            <div id="imageurl4" class="image">-->
+<!--                <img src="https://live.staticflickr.com/65535/51907292368_fb31bb5681.jpg" alt=""/>-->
+<!--            </div>-->
+<!--        </a>-->
+
+<!--    </div>-->
+<!--</div>-->
 <div class="center abc mt-4 mb-4">
     <button style="display:none;" id="previousButton" class="btn btn-outline-success me-1" type="button"> Previous
     </button>
     <button id="nextButton" class="btn btn-outline-success me-1" type="button"> Next</button>
 </div>
+{% endif %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
-<!--=======================================Form modal manage=====================-->
-<script>
-        $(function () {
-            $("#latLongFormMainDiv").hide();
-            $("#locationFormMainDiv").hide();
-            $("#back").hide();
 
-        });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</script>
-<script>
-        $(function () {
-            $("#selectMain").on("change", function () {
-<!--                console.log("value : ", this.value)-->
-                if (this.value === "1") {
-<!--                    console.log("Your are in 1 block")-->
-
-                    $("#selectMain").hide();
-                    $("#locationFormMainDiv").show();
-                    $("#back").show();
-                }
-
-                else if (this.value === "2") {
-<!--                    console.log("Your are in 2 block")-->
-
-                    $("#selectMain").hide();
-                    $("#latLongFormMainDiv").show();
-                    $("#back").show();
-                }
-                else {
-<!--                    console.log("Your are in else block")-->
-
-                    $("#back").hide();
-                    $("#selectMain").show();
-                    $("#latLongFormMainDiv").hide();
-                    $("#locationFormMainDiv").hide();
-                }
-            });
-
-        });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</script>
-
-<script>
-        $(function () {
-            $("#back").click(function () {
-                $("#back").hide();
-                $("#selectMain").show();
-                $("#latLongFormMainDiv").hide();
-                $("#locationFormMainDiv").hide();
-
-            });
-
-        });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</script>
-<!--=======================================Form modal manage=====================-->
-{% include "myapp/signinjs.html" %}
+{% include "myapp/searchjs.html" %}
+{% include "myapp/homejs.html" %}
 </body>
 </html>

@@ -1,0 +1,57 @@
+<!--=======================================Form modal manage=====================-->
+<script>
+    $(function () {
+        $("#latLongFormMainDiv").hide();
+        $("#locationFormMainDiv").hide();
+        $("#back").hide();
+
+    });
+
+</script>
+<script>
+    $(function () {
+        $("#selectMain").on("change", function () {
+            // <!--                console.log("value : ", this.value)-->
+            if (this.value === "1") {
+                // <!--                    console.log("Your are in 1 block")-->
+
+                $("#selectMain").hide();
+                $("#locationFormMainDiv").show();
+                $("#back").show();
+            }
+
+            else if (this.value === "2") {
+                // <!--                    console.log("Your are in 2 block")-->
+
+                $("#selectMain").hide();
+                $("#latLongFormMainDiv").show();
+                $("#back").show();
+            }
+            else {
+                // <!--                    console.log("Your are in else block")-->
+
+                $("#back").hide();
+                $("#selectMain").show();
+                $("#latLongFormMainDiv").hide();
+                $("#locationFormMainDiv").hide();
+            }
+        });
+
+    });
+
+</script>
+
+<script>
+    $(function () {
+        $("#back").click(function () {
+            $("#back").hide();
+            $("#selectMain").show();
+            $("#latLongFormMainDiv").hide();
+            $("#locationFormMainDiv").hide();
+
+        });
+
+    });
+
+</script>
+<!--=======================================Form modal manage=====================-->

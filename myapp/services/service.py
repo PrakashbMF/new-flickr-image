@@ -17,14 +17,20 @@ class LocationService:
         print("************************************************")
         # print("loc in", location_name)
         gen_date = timezone.now()
-        db_present_location_data = list(Location.objects.all().values_list("name", flat=True))
+        # db_present_location_data = list(Location.objects.all().values_list("name", flat=True))
         # print("db_present_location_data", db_present_location_data)
-        if location_name not in db_present_location_data:
-            location_data = Location(name=location_name, genDate=gen_date)
-            location_data.save()
-            return location_name
-        else:
-            return location_name
+
+        # if location_name not in db_present_location_data:
+        #     location_data = Location(name=location_name, genDate=gen_date)
+        #     location_data.save()
+        #     return location_name
+        # else:
+        #     return location_name
+        object_data, status_data = Location.objects.get_or_create(
+            name=location_name,
+            genDate=timezone.now(),
+        )
+        return (object_data, status_data)
 
 
 class GeoLocation:
@@ -34,7 +40,7 @@ class GeoLocation:
     def getGeoLocation(self, latitude, longitude):
         geolocator = Nominatim(user_agent="myGeocoder")
         location = geolocator.reverse(latitude + "," + longitude)
-        print("geo locations location", location)
+        # print("geo locations location", location)
         if location is not None:
             address = location.raw['address']
             city = address.get('city', '')
@@ -42,8 +48,8 @@ class GeoLocation:
             country = address.get('country', '')
             code = address.get('country_code')
             zipcode = address.get('postcode')
-            print("geo locations:", address)
-            print("geo city:", city)
+            # print("geo locations:", address)
+            # print("geo city:", city)
             # print("geo state:", state)
             # print("geo country:", country)
 
@@ -81,15 +87,26 @@ class FavouriteImageService:
         user = User.objects.get(pk=user_id)
         # print("user :", user)
 
-        if image_url in fav_images:
-            print("you are in if *******************************************")
+        object_data, status_data = Favourite.objects.get_or_create(
+            image_url=image_url,
+            user_id=user_id,
+            genDate=timezone.now(),
+        )
+        if status_data is False:
+            # image_object = Favourite.objects.get(image_url=image_url, user_id=user_id)
+            object_data.delete()
+        return status.HTTP_200_OK
 
-            image_object = Favourite.objects.get(image_url=image_url, user=user)
-            image_object.delete()
-            # self.deleteFavouriteImage(user, image_url)
-            return Response({"status": status.HTTP_204_NO_CONTENT})
-        else:
-            print("you are in else *******************************************")
-            image_object = Favourite(image_url=image_url, user=user, genDate=gen_date)
-            image_object.save()
-            return Response({"status": status.HTTP_201_CREATED})
+        # i can use get_create from django
+        # if image_url in fav_images:
+        #     print("you are in if *******************************************")
+        #
+        #     image_object = Favourite.objects.get(image_url=image_url, user=user)
+        #     image_object.delete()
+        #     # self.deleteFavouriteImage(user, image_url)
+        #     return Response({"status": status.HTTP_204_NO_CONTENT})
+        # else:
+        #     print("you are in else *******************************************")
+        #     image_object = Favourite(image_url=image_url, user=user, genDate=gen_date)
+        #     image_object.save()
+        #     return Response({"status": status.HTTP_201_CREATED})

@@ -66,18 +66,17 @@ TEMPLATES = [
         },
     },
 ]
-AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend', ]
-REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
+AUTH_USER_MODEL = 'myapp.User'
 
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.AllowAny',
-    #     'rest_framework.permissions.IsAuthenticated',
-    #     'rest_framework.permissions.DjangoModelPermissions',
-    #
-    # )
-}
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend', ]
+# REST_FRAMEWORK = {
+#     # Use Django's standard `django.contrib.auth` permissions,
+#     # or allow read-only access for unauthenticated users.
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework.authentication.BasicAuthentication'],
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.permissions.IsAuthenticated']
+# }
 
 WSGI_APPLICATION = 'new-flickr-image.wsgi.application'
 

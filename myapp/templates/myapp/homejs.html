@@ -1,0 +1,70 @@
+<script>
+    $("#searchButton").click(function () {
+        console.log("You are in location Search")
+        var location_name = $("#locationSearch").val();
+        if (location_name === "") {
+            alert("Please Input something on search box")
+
+        }
+        else {
+            console.log(location_name)
+            console.log("you are in search script")
+            $.ajax({
+                type: "POST",
+                url: "{% url 'insert-location' %}",
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    "location_name": location_name
+                },
+                success: function (location_response) {
+                    console.log("location_response", location_response)
+                    if (location_response === 200) {
+                        console.log(location_name)
+
+                        $.ajax({
+                            type: "POST",
+                            url: "{% url 'search-images' %}",
+                            data: {
+                                csrfmiddlewaretoken: '{{ csrf_token }}',
+                                "page_number": 1,
+                                "location_name": location_name,
+
+                            },
+                            success: function (imageResponse) {
+                                console.log("imageResponse :", imageResponse)
+
+                                var html = "";
+                                $(imageResponse.imageData).each(function (i, image_url) {
+                                    html +=
+                                        `<a href="#" class="card mt-3 mb-3" id="imageDataIterDiv">
+                                            <div class="content text-center mt-4">
+                                            <button id="likedButton" bttn-att=`+ `"` + encodeURI(image_url) + `"` + `
+                                            class="likedFavButton buttonFirst">
+                                            <i id="likedId" icon-att=`+ `"` + encodeURI(image_url) + `"` + `
+                                                class="iconFirst fa fa-thumbs-up like-size "></i>
+                                            </button>
+                                            </div>
+                                            <div id="imageurl" class="image">
+                                                <img src=`+ `"` + encodeURI(image_url) + `"` + ` alt=""/>
+                                            </div>
+                                            </a>`
+
+
+                                });
+                                $("#extraImageDataMainDiv>").empty().html(html);
+                                $("#pageNumber").val(imageResponse.page);
+                            }
+                        });
+                    }
+                    else {
+
+                    }
+
+                }
+
+            });
+        }
+
+    });
+
+</script>

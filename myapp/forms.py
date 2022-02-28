@@ -1,7 +1,5 @@
 from django import forms
-from django.contrib.auth.models import User
-
-from myapp.models import ExtendedUser
+from myapp.models import User
 
 
 class UserForm(forms.ModelForm):
@@ -13,7 +11,8 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'username', 'password')
+        # fields = ('first_name', 'last_name', 'email', 'username', 'password')
+        fields = ['first_name', 'last_name', 'email', 'password', 'phone', 'age']
         widgets = {
             'first_name': forms.TextInput(
                 attrs={'class': 'form-control', 'id': 'firstnameid', 'placeholder': 'Enter Your First Name'}),
@@ -21,19 +20,13 @@ class UserForm(forms.ModelForm):
                 attrs={'class': 'form-control', 'id': 'lastnameid', 'placeholder': 'Enter Your Last Name'}),
             'email': forms.EmailInput(
                 attrs={'class': 'form-control', 'id': 'emailid', 'placeholder': 'Enter Your Email'}),
-            'username': forms.TextInput(
-                attrs={'class': 'form-control', 'id': 'usernameid', 'placeholder': 'Enter Your Username'}),
+            # 'username': forms.TextInput(
+            #     attrs={'class': 'form-control', 'id': 'usernameid',
+            #            'placeholder': 'Enter Your Username'}),
             'password': forms.TextInput(
                 attrs={'class': 'form-control',
-                       'type': 'password', 'id': 'passwordid', 'placeholder': 'Enter Your Password'})
-        }
-
-
-class ExtendedUserForm(forms.ModelForm):
-    class Meta:
-        model = ExtendedUser
-        fields = ['phone', 'age']
-        widgets = {
+                       'type': 'password', "name": "password", 'id': 'passwordid',
+                       'placeholder': 'Enter Your Password'}),
             'phone': forms.NumberInput(
                 attrs={'class': ' form-control', 'id': 'phoneid', 'placeholder': 'Enter Your Phone'}),
             'age': forms.NumberInput(
@@ -41,14 +34,30 @@ class ExtendedUserForm(forms.ModelForm):
         }
 
 
+# class ExtendedUserForm(forms.ModelForm):
+#     class Meta:
+#         model = ExtendedUser
+#         fields = ['phone', 'age']
+#         widgets = {
+#             'phone': forms.NumberInput(
+#                 attrs={'class': ' form-control', 'id': 'phoneid', 'placeholder': 'Enter Your Phone'}),
+#             'age': forms.NumberInput(
+#                 attrs={'class': 'form-control', 'id': 'ageid', 'placeholder': 'Enter Your Age'})
+#         }
+
+
 class UserSigninForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'password']
+        fields = ['email', 'password']
         widgets = {
-            'username': forms.TextInput(
-                attrs={'class': 'form-control', 'name': "username", 'id': 'usernameid',
+            # 'username': forms.TextInput(
+            #     attrs={'class': 'form-control', 'name': "username", 'id': 'usernameid',
+            #            'placeholder': 'Enter Your Username'}),
+            'email': forms.TextInput(
+                attrs={'class': 'form-control', 'name': "email", 'id': 'emailid',
                        'placeholder': 'Enter Your Username'}),
+
             'password': forms.TextInput(
                 attrs={'class': 'form-control',
                        'type': 'password', 'name': "password", 'id': 'passwordid',

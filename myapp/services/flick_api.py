@@ -58,7 +58,7 @@ class FlickrData:
         return response
 
     def searchImageData(self, page=1, searchText=None):
-        print("flickr api", page, searchText)
+        # print("flickr api", page, searchText)
         method = "flickr.photos.search"
         flickr_key = self.flickr_key
         # print(flickr_key)

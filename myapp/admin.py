@@ -1,8 +1,10 @@
 from django.contrib import admin
 
 # Register your models here.
-from myapp.models import Favourite, Location, ExtendedUser
+from myapp.models import Favourite, Location, User
 
-admin.site.register(ExtendedUser)
+# ExtendedUser
+
+admin.site.register(User)
 admin.site.register(Location)
 admin.site.register(Favourite)
