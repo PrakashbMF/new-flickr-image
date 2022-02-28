@@ -68,3 +68,136 @@
     });
 
 </script>
+
+<!-- next page -->
+<script>
+    $(function () {
+        $("#nextButton").click(function () {
+            console.log(" you are in next page")
+            var page_number = $("#pageNumber").val();
+            console.log(page_number)
+            var page_number = parseInt(page_number) + 1;
+            // console.log(page_number)
+            // console.log(page_number > 1)
+
+
+
+            var location_name = $("#locationSearch").val();
+            // console.log($(this))
+            console.log("page_number", page_number)
+            // console.log("after add page_number", parseInt(page_number) + 1)
+            console.log("location_name", location_name)
+            $.ajax({
+                type: "POST",
+                url: "{% url 'search-images' %}",
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    "page_number": page_number,
+                    "location_name": location_name
+                },
+                success: function (imageResponse) {
+                    // imageResponse.total_pages = 5;
+                    if (page_number === imageResponse.total_pages) {
+                        $("#nextButton").hide()
+                    }
+                    console.log(" you are in next page")
+                    // console.log("next click imageResponse", imageResponse)
+                    // console.log("next click imageResponse", imageResponse.imageData)
+                    var html = "";
+                    var htmlForPageInput = "";
+                    $(imageResponse.imageData).each(function (i, image_url) {
+                        // console.log(image_url)
+                        html +=
+                            `<a href="#" class="card mt-3 mb-3" id="imageDataIterDiv">
+                                <div class="content text-center mt-4">
+                                <button id="likedButton" bttn-att=`+ `"` + encodeURI(image_url) + `"` + `
+                                class="likedFavButton buttonFirst">
+                                <i id="likedId" icon-att=`+ `"` + encodeURI(image_url) + `"` + `
+                                    class="iconFirst fa fa-thumbs-up like-size "></i>
+                                </button>
+                                </div>
+                                <div id="imageurl" class="image">
+                                    <img src=`+ `"` + encodeURI(image_url) + `"` + ` alt=""/>
+                                </div>
+                                </a>`
+                    });
+                    $("#extraImageDataMainDiv>").empty().html(html);
+                    $("#pageNumber").val(imageResponse.page);
+                    if (page_number > 1) {
+                        $("#previousButton").show()
+                    }
+                    // console.log("innera ajax ", $(this))
+                    // $("#")
+
+
+                    // $(this).trigger('reset')
+                }
+            });
+
+        })
+    })
+</script>
+
+
+<script>
+    $(function () {
+        $("#previousButton").click(function () {
+            // console.log(" you are in next page")
+            var page_number = $("#pageNumber").val()
+            var page_number = parseInt(page_number) - 1;
+
+            var location_name = $("#locationSearch").val();
+            console.log("page_number", page_number)
+            // console.log($(this))
+            if (page_number < 2) {
+                $("#previousButton").hide()
+            }
+            // console.log("page_number", page_number)
+            // console.log("after substract page_number", parseInt(page_number) - 1)
+            console.log("location_name", location_name)
+            $.ajax({
+                type: "POST",
+                url: "{% url 'search-images' %}",
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    "page_number": page_number,
+                    "location_name": location_name
+                },
+                success: function (imageResponse) {
+                    if (page_number < imageResponse.total_pages) {
+                        $("#nextButton").show()
+                    }
+                    console.log(" you are in previous page")
+                    // console.log("previous click imageResponse", imageResponse)
+                    // console.log("previous click imageResponse", imageResponse.imageData)
+                    var html = "";
+                    var htmlForPageInput = "";
+                    $(imageResponse.imageData).each(function (i, image_url) {
+                        // console.log(image_urshowl)
+                        html +=
+                            `<a href="#" class="card mt-3 mb-3" id="imageDataIterDiv">
+                                <div class="content text-center mt-4">
+                                <button id="likedButton" bttn-att=`+ `"` + encodeURI(image_url) + `"` + `
+                                class="likedFavButton buttonFirst">
+                                <i id="likedId" icon-att=`+ `"` + encodeURI(image_url) + `"` + `
+                                    class="iconFirst fa fa-thumbs-up like-size "></i>
+                                </button>
+                                </div>
+                                <div id="imageurl" class="image">
+                                    <img src=`+ `"` + encodeURI(image_url) + `"` + ` alt=""/>
+                                </div>
+                                </a>`
+
+                    });
+                    $("#extraImageDataMainDiv>").empty().html(html);
+                    $("#pageNumber").val(imageResponse.page);
+
+                    // console.log("innera ajax ", $(this))
+
+                    // $(this).trigger('reset')
+                }
+            });
+
+        })
+    })
+</script>

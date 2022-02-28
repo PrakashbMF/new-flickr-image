@@ -306,9 +306,12 @@ class SearchImages(APIView):
         print("**args**************************************** :", args)
         print("request**************************************** :", request.data)
 
-        print(request.data['location_name'])
-
-        location_name = request.data['location_name']
+        # print(request.data['location_name'] == "")
+        if request.data['location_name'] == "":
+            location_name = None
+        else:
+            location_name = request.data['location_name']
+        # location_name = request.data['location_name']
         page_number = request.data['page_number']
         print(location_name, page_number)
         # print("***************************************")
