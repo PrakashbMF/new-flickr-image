@@ -17,9 +17,9 @@
     <title>Home</title>
 </head>
 <body>
-<!--<h1>Welcome {{ name }}</h1>-->
-<!--<button type="submit"><a href="/signout">SignOut</a></button>-->
+
 <div><input type="hidden" id="userIdId" name="userIdName" value="{{ user_id }}"></div>
+<div><input type="hidden" id="pageNumber" name="pageNumber" value="{{page}}"></div>
 <div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -30,45 +30,19 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <!--                        <form name="homeImageForm" method="get" action="/home">-->
+                        <!--                            <a class="nav-link " aria-current="page" type="submit"-->
+                        <!--                               onclick="document.homeImageForm.submit()">Home</a>-->
+                        <!--                        </form>-->
+                        <a class="nav-link " aria-current="page" href="/home">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Fovourites</a>
+                        <a id="favId" class="nav-link active" href="/favourite-image">Fovourites</a>
                     </li>
 
                 </ul>
-                <select class="form-select mt-2 px-2 select-box" id="selectMain" aria-label="Default select example">
-                    <option id="default" value="0" selected>Please choose one option</option>
-                    <option id="selectLocation" value="1">Location</option>
-                    <option id="selectLatLong" value="2">Latitude Longitude</option>
-                </select>
-
-                <button class="btn btn-secondary mt-2 me-1" type="button" id="back">Back</button>
-
-                <div id="latLongFormMainDiv">
-                    <form class="d-flex mt-2" id="latLongForm" for="latLongSearch">
-
-                        <input class="form-control me-1" type="text" name="latitudeSearch" id="latitudeSearch" value=""
-                               placeholder="latitude Search" aria-label="Search" required>
-                        <input class="form-control me-1" type="text" name="longitudeSearch" id="longitudeSearch"
-                               value=""
-                               placeholder="longitude Search" aria-label="Search" required>
-
-                        <button id="latLongSearchButton" class="btn btn-outline-success me-1" type="button">Search
-                        </button>
-                    </form>
-
-                </div>
-                <div id="locationFormMainDiv">
-                    <form class="d-flex mt-2" id="LocationForm" for="locationSearch">
-
-                        <input class="form-control me-1" type="text" name="search" id="locationSearch" value=""
-                               placeholder="Location Search" aria-label="Search" required>
-                        <button id="searchButton" class="btn btn-outline-success me-1" type="button">Search</button>
-                    </form>
-
-                </div>
                 <button type="button" class="btn btn-outline-danger mx-2 mt-2 me-1"><a href="/signout">SignOut</a>
                 </button>
 
@@ -77,14 +51,8 @@
     </nav>
 </div>
 
-<!--<div id="extraImageDataMainDiv">-->
-<!--    {{name}}-->
-<!--    {{user_id}}-->
-<!--    {{page}}-->
-<!--    {{total_pages}}-->
-<!--</div>-->
-
 <div id="extraImageDataMainDiv">
+    {% if favourite_images %}
     <div class="portfolio px-5" id="imageDataMainDiv">
         {% for image_url in favourite_images %}
 
@@ -93,7 +61,7 @@
                 <button id="likedButton" bttn-att="{{image_url}}"
                         class="likedFavButton buttonFirst">
                     <i id="likedId" icon-att="{{image_url}}"
-                       class="iconFirst fa fa-thumbs-up like-size "></i>
+                       class="iconFirst fa fa-thumbs-up like-size liked "></i>
                 </button>
 
             </div>
@@ -104,11 +72,23 @@
         {% endfor %}
 
     </div>
+    {% else %}
+    <div id="emptyId">
+        <div class="text-center mt-5">
+            <h1>You have no Favourite Image to Show</h1>
+            <h4 class=" mt-5">Please go <a href="/home">Home</a> and do like to add in your Favourite</h4>
+        </div>
+    </div>
+    {% endif %}
 </div>
+
+<script src='https://code.jquery.com/jquery-1.12.4.js'></script>
+<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js'></script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
-{% include "myapp/searchjs.html" %}
+{% include "myapp/favremovejs.html" %}
 
 </body>
 </html>

@@ -8,10 +8,15 @@
         age = $("#ageid").val()
         phone = $("#phoneid").val()
 
-        console.log(first_name, last_name, username, email, password, age, phone)
+        // console.log(first_name, last_name, username, email, password, age, phone)
         if (first_name === "") {
             alert("Please Enter first_name")
-        } else if (username === "") {
+        } 
+        else if (last_name === "") {
+            alert("Please Enter last name")
+
+        }
+        else if (username === "") {
             alert("Please Enter username")
 
         }
@@ -21,6 +26,14 @@
         }
         else if ((password === "")) {
             alert("Please Enter Password")
+
+        }
+        else if ((age === "")) {
+            alert("Please Enter age")
+
+        }
+        else if ((phone === "")) {
+            alert("Please Enter phone")
 
         }
         else {

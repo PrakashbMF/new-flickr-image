@@ -76,7 +76,7 @@ Create a Superuser to check Database by providing username,email(optional),passw
     │  │  ├── flickr_api.py
     │  │  └── flickr_data.py
     │  ├── migrations
-    │  ├── services
+    │  ├── util
     │  │  ├── favourite_service.py
     │  │  ├── geo_location_service.py
     │  │  ├── location_service.py

@@ -1,42 +1,42 @@
 <script>
     $("#searchButton").click(function () {
-        console.log("You are in location Search")
+        // console.log("You are in location Search")
         var location_name = $("#locationSearch").val();
         if (location_name === "") {
             alert("Please Input something on search box")
 
         }
         else {
-            console.log(location_name)
-            console.log("you are in search script")
+            // console.log(location_name)
+            // console.log("you are in search script")
+            // $.ajax({
+            //     type: "POST",
+            //     url: "{% url 'insert-location' %}",
+            //     data: {
+            //         csrfmiddlewaretoken: '{{ csrf_token }}',
+            //         "location_name": location_name
+            //     },
+            //     success: function (location_response) {
+            //         // console.log("location_response", location_response)
+            //         if (location_response === 200) {
+            // console.log(location_name)
+
             $.ajax({
                 type: "POST",
-                url: "{% url 'insert-location' %}",
+                url: "{% url 'search-images' %}",
                 data: {
                     csrfmiddlewaretoken: '{{ csrf_token }}',
-                    "location_name": location_name
+                    "page_number": 1,
+                    "location_name": location_name,
+
                 },
-                success: function (location_response) {
-                    console.log("location_response", location_response)
-                    if (location_response === 200) {
-                        console.log(location_name)
+                success: function (imageResponse) {
+                    // console.log("imageResponse :", imageResponse)
 
-                        $.ajax({
-                            type: "POST",
-                            url: "{% url 'search-images' %}",
-                            data: {
-                                csrfmiddlewaretoken: '{{ csrf_token }}',
-                                "page_number": 1,
-                                "location_name": location_name,
-
-                            },
-                            success: function (imageResponse) {
-                                console.log("imageResponse :", imageResponse)
-
-                                var html = "";
-                                $(imageResponse.imageData).each(function (i, image_url) {
-                                    html +=
-                                        `<a href="#" class="card mt-3 mb-3" id="imageDataIterDiv">
+                    var html = "";
+                    $(imageResponse.imageData).each(function (i, image_url) {
+                        html +=
+                            `<a href="#" class="card mt-3 mb-3" id="imageDataIterDiv">
                                             <div class="content text-center mt-4">
                                             <button id="likedButton" bttn-att=`+ `"` + encodeURI(image_url) + `"` + `
                                             class="likedFavButton buttonFirst">
@@ -50,19 +50,21 @@
                                             </a>`
 
 
-                                });
-                                $("#extraImageDataMainDiv>").empty().html(html);
-                                $("#pageNumber").val(imageResponse.page);
-                            }
-                        });
-                    }
-                    else {
-
-                    }
-
+                    });
+                    // $("#extraImageDataMainDiv>").empty().html(html);
+                    $("#imageDataMainDiv").empty().html(html);
+                    $("#pageNumber").val(imageResponse.page);
+                    onclickLike()
                 }
-
             });
+            // }
+            // else {
+
+            // }
+
+            //     }
+
+            // });
         }
 
     });
@@ -73,9 +75,9 @@
 <script>
     $(function () {
         $("#nextButton").click(function () {
-            console.log(" you are in next page")
+            // console.log(" you are in next page")
             var page_number = $("#pageNumber").val();
-            console.log(page_number)
+            // console.log(page_number)
             var page_number = parseInt(page_number) + 1;
             // console.log(page_number)
             // console.log(page_number > 1)
@@ -84,9 +86,9 @@
 
             var location_name = $("#locationSearch").val();
             // console.log($(this))
-            console.log("page_number", page_number)
+            // console.log("page_number", page_number)
             // console.log("after add page_number", parseInt(page_number) + 1)
-            console.log("location_name", location_name)
+            // console.log("location_name", location_name)
             $.ajax({
                 type: "POST",
                 url: "{% url 'search-images' %}",
@@ -100,7 +102,7 @@
                     if (page_number === imageResponse.total_pages) {
                         $("#nextButton").hide()
                     }
-                    console.log(" you are in next page")
+                    // console.log(" you are in next page")
                     // console.log("next click imageResponse", imageResponse)
                     // console.log("next click imageResponse", imageResponse.imageData)
                     var html = "";
@@ -121,7 +123,8 @@
                                 </div>
                                 </a>`
                     });
-                    $("#extraImageDataMainDiv>").empty().html(html);
+                    // $("#extraImageDataMainDiv>").empty().html(html);
+                    $("#imageDataMainDiv").empty().html(html);
                     $("#pageNumber").val(imageResponse.page);
                     if (page_number > 1) {
                         $("#previousButton").show()
@@ -129,7 +132,7 @@
                     // console.log("innera ajax ", $(this))
                     // $("#")
 
-
+                    onclickLike();
                     // $(this).trigger('reset')
                 }
             });
@@ -147,14 +150,14 @@
             var page_number = parseInt(page_number) - 1;
 
             var location_name = $("#locationSearch").val();
-            console.log("page_number", page_number)
+            // console.log("page_number", page_number)
             // console.log($(this))
             if (page_number < 2) {
                 $("#previousButton").hide()
             }
             // console.log("page_number", page_number)
             // console.log("after substract page_number", parseInt(page_number) - 1)
-            console.log("location_name", location_name)
+            // console.log("location_name", location_name)
             $.ajax({
                 type: "POST",
                 url: "{% url 'search-images' %}",
@@ -167,7 +170,7 @@
                     if (page_number < imageResponse.total_pages) {
                         $("#nextButton").show()
                     }
-                    console.log(" you are in previous page")
+                    // console.log(" you are in previous page")
                     // console.log("previous click imageResponse", imageResponse)
                     // console.log("previous click imageResponse", imageResponse.imageData)
                     var html = "";
@@ -189,15 +192,195 @@
                                 </a>`
 
                     });
-                    $("#extraImageDataMainDiv>").empty().html(html);
+                    // $("#extraImageDataMainDiv>").empty().html(html);
+                    $("#imageDataMainDiv").empty().html(html);
                     $("#pageNumber").val(imageResponse.page);
 
                     // console.log("innera ajax ", $(this))
 
                     // $(this).trigger('reset')
+                    onclickLike();
                 }
             });
 
         })
+    })
+</script>
+
+<!-- search and insert location -->
+<script>
+    $("#locationSearch").keydown(function () {
+        // searchQuery = $("#locationSearch").val()
+        // console.log(searchQuery)
+        $("#locationSearch").autocomplete({
+            source: "{% url 'location-list-insert' %}",
+            // source: `/location-list-insert/`,
+            // source: `/location-list/`,
+            // source: `/location-list/?name=${searchQuery}`,
+            minLength: 1
+        });
+    });
+
+
+</script>
+
+<!-- lat-long search -->
+
+<script>
+    $(function () {
+        $("#latLongSearchButton").click(function () {
+            var latitude = $("#latitudeSearch").val();
+            var longitude = $("#longitudeSearch").val();
+            // console.log("latitude ", latitude)
+            // console.log("longitude ", longitude)
+            if (latitude === "" & longitude === "") {
+                alert("Please Enter both")
+
+            }
+            else if (latitude === "") {
+                alert("Please Enter latitude")
+
+            }
+            else if (longitude === "") {
+                alert("Please Enter longitude")
+
+            }
+            else {
+                $.ajax({
+                    type: "GET",
+                    url: `/geolocation/?latitude=${latitude}&longitude=${longitude}`,
+                    // url: "{% url 'geolocation' %}",
+                    // data: {
+                    //     "latitude": latitude,
+                    //     "longitude": longitude
+                    // },
+                    success: function (response) {
+                        // console.log("response", response);
+                        // console.log("location_name", response.location_name);
+                        // console.log("null or not", (response.location_name != null))
+
+                        $("#locationSearch").val(response.location_name);
+                        var location_name = $("#locationSearch").val();
+                        // console.log("from search box location_name", location_name)
+
+                        // =================for repeat code search ===================
+                        // console.log(location_name)
+                        // console.log("you are in search script")
+                        // if (response.location_name != null) {
+                        //     $.ajax({
+                        //         type: "POST",
+                        //         url: "{% url 'insert-location' %}",
+                        //         data: {
+                        //             csrfmiddlewaretoken: '{{ csrf_token }}',
+                        //             "location_name": location_name
+                        //         },
+                        //         success: function (location_response) {
+                        //             // console.log("insert location done : ", location_response)
+                        // if (location_response === 200) {
+                        if (response.location_name != null) {
+                            $.ajax({
+                                type: "POST",
+                                url: "{% url 'search-images' %}",
+                                data: {
+                                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                                    "page_number": 1,
+                                    "location_name": location_name,
+
+                                },
+                                success: function (imageResponse) {
+                                    // console.log("image retrive done : ", imageResponse)
+                                    // console.log("image retrive done : ", imageResponse.imageData)
+                                    var favourite_images = imageResponse.favourite_images;
+                                    // console.log("favourite images retrive done : ", favourite_images)
+
+                                    var html = "";
+                                    $(imageResponse.imageData).each(function (i, image_url) {
+                                        html +=
+                                            `<a href="#" class="card mt-3 mb-3" id="imageDataIterDiv">
+                                                            <div class="content text-center mt-4">
+                                                            <button id="likedButton" bttn-att=`+ `"` + encodeURI(image_url) + `"` + `
+                                                            class="likedFavButton buttonFirst">
+                                                            <i id="likedId" icon-att=`+ `"` + encodeURI(image_url) + `"` + `
+                                                                class="iconFirst fa fa-thumbs-up like-size "></i>
+                                                            </button>
+                                                            </div>
+                                                            <div id="imageurl" class="image">
+                                                                <img src=`+ `"` + encodeURI(image_url) + `"` + ` alt=""/>
+                                                            </div>
+                                                            </a>`
+
+                                    });
+                                    // $("#extraImageDataMainDiv>").empty().html(html);
+                                    $("#imageDataMainDiv").empty().html(html);
+                                    $("#pageNumber").val(imageResponse.page);
+                                    onclickLike()
+
+                                }
+                            });
+                        } else {
+                            alert("Location and image nor found inner")
+
+                        }
+                    }
+                });
+
+                // }
+                // else {
+                //     alert("Location and image nor found outer")
+                // }
+                //     }
+                // });
+            }
+        })
+    })
+</script>
+
+<script>
+    $("#favId").click()
+</script>
+
+<!-- like unlike -->
+
+<script>
+    // $("a").find("i.iconFirst").on("click", function () {
+    // $("a").on("click", ".iconFirst", function () {
+    // $("#likedId").click(function () {
+    //     console.log("You are in like icon");
+    // });
+
+
+    // $("a").find("i.iconFirst").on("click", function () {
+    function onclickLike() {
+        // console.log("image_url", image_url)
+
+        $("a").find("i.iconFirst").on("click", function () {
+            // console.log("You are in liked icon");
+            let id_val = $(this).attr("icon-att");
+            // let id_val = $("#iconFirst").attr("icon-att");
+            // console.log("id_val :", id_val)
+            var this_elemt = $(this)
+            // this_elemt.closest('i').toggleClass("liked ")
+            $.ajax({
+                type: "POST",
+                // url: `/like-unlike/`,
+                url: "{% url 'like-unlike' %}",
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    "image_url": id_val,
+                },
+                success: function (response) {
+                    // console.log(response)
+                    this_elemt.closest('i').toggleClass("liked ")
+                }
+            });
+        });
+
+    }
+</script>
+
+<script>
+    $(function () {
+        onclickLike()
+
     })
 </script>

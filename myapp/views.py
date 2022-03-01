@@ -1,25 +1,20 @@
-import json
-
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.hashers import make_password, check_password
-from django.forms import model_to_dict
-from django.shortcuts import render, redirect
+from django.contrib.auth.hashers import make_password
+from django.http.request import QueryDict
+from django.shortcuts import redirect
 # Create your views here.
 from django.utils import timezone
+from django.views.generic.base import TemplateView
 from rest_framework import status
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.http.request import QueryDict
 
-from myapp.data_serializer import LocationSerializer
 from myapp.forms import UserForm, UserSigninForm
 #
-from myapp.models import Location, Favourite
-from myapp.services.flick_api import FlickrData
-from myapp.services.service import LocationService, FavouriteImageService, GeoLocation
-from django.views.generic.base import TemplateView
+from myapp.models import Location, Favourite, User
+from myapp.util.flick_api import FlickrData
+from myapp.util.service import GeoLocation
 
 
 # print(make_password("admin"))
@@ -35,9 +30,7 @@ class Signup(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user_form = UserForm()
-        # extended_user_form = ExtendedUserForm()
         context['user_form'] = user_form
-        # context['extended_user_form'] = extended_user_form
         return context
 
 
@@ -58,10 +51,6 @@ class Signin(TemplateView):
     def post(self, request, *args, **kwargs):
         email = request.POST['email']
         password = request.POST['password']
-        # print("*************************************************************")
-        # print("username ", username)
-        # print("password ", password)
-        # ===================authenticate predefined======================
         user = authenticate(email=email, password=password)
         print("user : ", user)
         if user is not None:
@@ -69,6 +58,7 @@ class Signin(TemplateView):
             return redirect("home")
         else:
             # return Response({"status": 0, "message": "Failed"})
+            messages.error(request, "Bad Credentials !!")
             return redirect('signin')
 
 
@@ -96,18 +86,22 @@ class CreateUser(APIView):
             try:
                 print("user_form", user_form)
                 user_form.save()
+                UserForm()
                 return Response({"message": "Account has created successfully"})
             except Exception:
                 # print("Exception :", Exception)
                 return Response(Exception)
         else:
             # print("***************************************************")
-
-            # print("user_form.errors : ", user_form.errors)
+            UserForm()
+            print("user_form.errors : ", user_form.errors)
             return Response({"message": "Please Enter valid Email Information"})
 
 
 class Home(TemplateView):
+    """
+           Redirect to requested user favourite page and show liked images if any
+    """
     template_name = "myapp/home.html"
 
     def get_context_data(self, *args, **kwargs):
@@ -133,15 +127,13 @@ class FavouriteImage(TemplateView):
     template_name = "myapp/favourite.html"
 
     def get_context_data(self, *args, **kwargs):
-        # print("*args**************************************** :", args)
-        # print("**kwargs**************************************** :", kwargs)
-        print("you are in Favourite")
+        # print("you are in Favourite")
         context = super().get_context_data(**kwargs)
-        # print("**context**************************************** :", context)
         name = self.request.user.first_name
         user_id = self.request.user.id
-        favourite_image_service = FavouriteImageService()
-        favourite_images = favourite_image_service.get_favourites(user_id)
+        user = User.objects.get(id=user_id)
+        favourite_images = list(
+            user.favourite_set.all().order_by("-genDate").values_list("image_url", flat=True))
         # print("favourite_images :", favourite_images)
         context['name'] = name
         context['user_id'] = user_id
@@ -161,12 +153,11 @@ class LocationList(APIView):
     """
 
     def get(self, request, *args, **kwargs):
-        # print("**kwargs**************************************** :", kwargs)
-        # print("kwargs.get('name)", kwargs.get("name"))
-        search_term = kwargs.get("name")
+        search_term = request.query_params.get("term")
         print("search_term : ", search_term)
-        location_names = list(Location.objects.filter(name__icontains=search_term).values_list("name", flat=True))
+        location_names = list(Location.objects.filter(name__contains=search_term).values_list("name", flat=True))
         # return Response({"location_names": location_names, "status": 200})
+        print(location_names)
         return Response(location_names, status=status.HTTP_200_OK)
 
 
@@ -195,29 +186,37 @@ class InsertLocation(APIView):
 
 class GeoLocationFromLatLong(APIView):
     """
-           Return location name by longitude and latitude
+           Return location name by longitude and latitude and if location present in db then return that location name
+           else insert in db
 
             method type : get
-            Param : latitude, longitudeGeoLocationFromLatLong
+            Param : latitude, longitude
             Return : location_name
             Rtype : json response
 
     """
 
     def get(self, request, *args, **kwargs):
-        latitude = request.data["latitude"]
-        longitude = request.data["longitude"]
+        # latitude = request.data["latitude"]
+        # longitude = request.data["longitude"]
+        latitude = request.query_params.get("latitude")
+        longitude = request.query_params.get("longitude")
+
         geo_location_service = GeoLocation()
         location_name = geo_location_service.getGeoLocation(latitude, longitude)
-        # print("location_name", location_name)
-        # return Response({"location_name": location_name, "status": status.HTTP_200_OK})
-        return Response(location_name, status=status.HTTP_200_OK)
+
+        searched_item = list(Location.objects.filter(name=location_name).values_list("name", flat=True))
+        if not searched_item:
+            Location.objects.create(name=location_name, genDate=timezone.now())
+        return Response({"location_name": location_name}, status=status.HTTP_200_OK)
         # return Response(location_name, status.HTTP_200_OK)
 
 
 class LikeUnlike(APIView):
     """
            Return response status for like and unlike
+           if image url is present in db for request user then it will delete
+           else insert that url for requested user
 
             method type : post
             Param : image_url
@@ -229,11 +228,8 @@ class LikeUnlike(APIView):
     def post(self, request, *args, **kwargs):
         image_url = request.data["image_url"]
 
-        user_id = request.data["user_id"]
-        # user_id = request.data["user_id"]
-        # print("new user_id  : ", user_id)
-        # fav_image_service = FavouriteImageService()
-        # response = fav_image_service.insert_delete_image(user_id, image_url)
+        user_id = request.user.id
+        print("user_id :", user_id)
         object_data, status_data = Favourite.objects.get_or_create(
             image_url=image_url,
             user_id=user_id,
@@ -264,18 +260,26 @@ class LikeUnlike(APIView):
 #         return Response(favourite_images)
 
 class GetLocationByParamAndInsert(APIView):
+    """
+               Return searched input list  if input is present in db
+               otherwise it will insert that input in db and return that input
+
+                method type : get
+                Param : term
+                Return : images, page, total_pages, favourite_images
+
+        """
+
     def get(self, request, *args, **kwargs):
-        search_term = kwargs.get("name")
-        print("search_term :", search_term)
-
+        # search_term = kwargs.get("name")
+        search_term = request.query_params.get("term")
+        # print("search_term :", search_term)
         searched_items = list(Location.objects.filter(name__contains=search_term).values_list("name", flat=True))
-
-        print("searched_items :", searched_items)
-
+        # print("searched_items :", searched_items)
         if searched_items:
             return Response(searched_items, status=status.HTTP_200_OK)
         else:
-            object_data = Location.objects.create(name=search_term, genDate=timezone.now())
+            Location.objects.create(name=search_term, genDate=timezone.now())
             # object_data = Location(name=search_term, genDate=timezone.now())
             # object_data.save()
             # object_data = LocationSerializer(data=object_data)
@@ -284,6 +288,7 @@ class GetLocationByParamAndInsert(APIView):
             # object_data = json.dumps(object_data)
             # object_data = json.dumps(object_data, indent=4, sort_keys=True, default=str)
             searched_items.append(search_term)
+            # print(searched_items)
             return Response(searched_items, status=status.HTTP_200_OK)
 
 
@@ -295,16 +300,11 @@ class SearchImages(APIView):
             method type : get
             Param : location_name, page_number
             Return : images, page, total_pages, favourite_images
-            Rtype : json responseFavouriteImageService
+            Rtype : json response
 
     """
 
     def post(self, request, *args, **kwargs):
-        # user_id = request.session.get('id')
-        # print("user_id", user_id)
-        print("**kwargs**************************************** :", kwargs)
-        print("**args**************************************** :", args)
-        print("request**************************************** :", request.data)
 
         # print(request.data['location_name'] == "")
         if request.data['location_name'] == "":
@@ -323,7 +323,23 @@ class SearchImages(APIView):
             {"imageData": image_data, "page": page, "total_pages": total_pages}, status=status.HTTP_200_OK)
 
 
-def signout(request):
-    logout(request)
-    messages.success(request, "Logout Success")
-    return redirect("signin")
+class SignOut(TemplateView):
+    """
+        Logout the request and redirect to login page
+    """
+    template_name = "myapp/signin.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        logout(self.request)
+        messages.success(self.request, "Logout Success")
+        user_signin_form = UserSigninForm()
+        context['user_signin_form'] = user_signin_form
+        # return redirect("signin")
+        return context
+
+#
+# def signout(request):
+#     logout(request)
+#     messages.success(request, "Logout Success")
+#     return redirect("signin")
