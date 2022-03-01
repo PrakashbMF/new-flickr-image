@@ -8,7 +8,6 @@
         age = $("#ageid").val()
         phone = $("#phoneid").val()
 
-        // console.log(first_name, last_name, username, email, password, age, phone)
         if (first_name === "") {
             alert("Please Enter first_name")
         } 
@@ -54,7 +53,6 @@
                     console.log(signup_response)
                     console.log(signup_response.message)
 
-                    // $("#messageDiv").css('visibility','visible')
                     $("#messageDiv").show()
                     $("#messageDiv").empty().text(signup_response.message)
                 }

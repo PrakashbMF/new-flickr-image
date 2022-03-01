@@ -1,27 +1,22 @@
 <script>
 
     $("a").find("i.iconFirst").on("click", function () {
-        // console.log("You are in fav liked icon");
         let id_val = $(this).attr("icon-att");
-        // let id_val = $("#iconFirst").attr("icon-att");
-        // console.log("id_val :", id_val)
+        let user_id = $("#userIdId").val();
         var this_elemt = $(this)
-        // this_elemt.closest('i').toggleClass("liked ")
         $.ajax({
             type: "POST",
             url: "{% url 'like-unlike' %}",
             data: {
                 csrfmiddlewaretoken: '{{ csrf_token }}',
                 "image_url": id_val,
+                "user_id": user_id,
             },
             success: function (response) {
-                // console.log(response)
-                // this_elemt.closest('i').toggleClass("liked ")
-                // this_elemt.closest('i').toggleClass("liked ")
+
                 this_elemt.closest("#imageDataIterDiv").fadeOut();
-                
+
             }
         });
     });
 </script>
-

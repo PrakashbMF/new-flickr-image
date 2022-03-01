@@ -3,15 +3,8 @@ from myapp.models import User
 
 
 class UserForm(forms.ModelForm):
-    # first_name = forms.CharField(max_length=20, required=True)
-    # last_name = forms.CharField(max_length=20, required=True)
-    # email = forms.EmailField(max_length=20, required=True)
-    # username = forms.CharField(max_length=20, required=True)
-    # password = forms.CharField(max_length=20, required=True)
-
     class Meta:
         model = User
-        # fields = ('first_name', 'last_name', 'email', 'username', 'password')
         fields = ['first_name', 'last_name', 'email', 'password', 'phone', 'age']
         widgets = {
             'first_name': forms.TextInput(
@@ -20,9 +13,6 @@ class UserForm(forms.ModelForm):
                 attrs={'class': 'form-control', 'id': 'lastnameid', 'placeholder': 'Enter Your Last Name'}),
             'email': forms.EmailInput(
                 attrs={'class': 'form-control', 'id': 'emailid', 'placeholder': 'Enter Your Email'}),
-            # 'username': forms.TextInput(
-            #     attrs={'class': 'form-control', 'id': 'usernameid',
-            #            'placeholder': 'Enter Your Username'}),
             'password': forms.TextInput(
                 attrs={'class': 'form-control',
                        'type': 'password', "name": "password", 'id': 'passwordid',
@@ -34,26 +24,11 @@ class UserForm(forms.ModelForm):
         }
 
 
-# class ExtendedUserForm(forms.ModelForm):
-#     class Meta:
-#         model = ExtendedUser
-#         fields = ['phone', 'age']
-#         widgets = {
-#             'phone': forms.NumberInput(
-#                 attrs={'class': ' form-control', 'id': 'phoneid', 'placeholder': 'Enter Your Phone'}),
-#             'age': forms.NumberInput(
-#                 attrs={'class': 'form-control', 'id': 'ageid', 'placeholder': 'Enter Your Age'})
-#         }
-
-
 class UserSigninForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['email', 'password']
         widgets = {
-            # 'username': forms.TextInput(
-            #     attrs={'class': 'form-control', 'name': "username", 'id': 'usernameid',
-            #            'placeholder': 'Enter Your Username'}),
             'email': forms.TextInput(
                 attrs={'class': 'form-control', 'name': "email", 'id': 'emailid',
                        'placeholder': 'Enter Your Username'}),
