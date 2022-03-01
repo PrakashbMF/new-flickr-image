@@ -17,6 +17,7 @@
     <title>Home</title>
 </head>
 <body>
+{% if user.is_authenticated %}
 
 <div><input type="hidden" id="userIdId" name="userIdName" value="{{ user_id }}"></div>
 <div><input type="hidden" id="pageNumber" name="pageNumber" value="{{page}}"></div>
@@ -58,11 +59,9 @@
 
         <a href="#" class="card mt-3 mb-3" id="imageDataIterDiv">
             <div class="content text-center mt-4">
-                <button id="likedButton" bttn-att="{{image_url}}"
-                        class="likedFavButton buttonFirst">
+
                     <i id="likedId" icon-att="{{image_url}}"
                        class="iconFirst fa fa-thumbs-up like-size liked "></i>
-                </button>
 
             </div>
             <div id="imageurl" class="image">
@@ -81,7 +80,7 @@
     </div>
     {% endif %}
 </div>
-
+{% endif %}
 <script src='https://code.jquery.com/jquery-1.12.4.js'></script>
 <script src='https://code.jquery.com/ui/1.12.1/jquery-ui.js'></script>
 

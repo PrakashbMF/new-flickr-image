@@ -22,9 +22,17 @@ class FlickrData:
         photos = response.get("photos").get("photo")
         urls = []
         for x in photos:
+            url_list = []
             server_id = x.get("server")
             id = x.get("id")
             secret = x.get("secret")
             url = "https://live.staticflickr.com/{}/{}_{}.jpg".format(server_id, id, secret)
-            urls.append(url)
+            url_list.append(url)
+            # url_list.append(True)
+
+            urls.append(url_list)
+            # urls.append(url)
         return urls, page, total_pages
+
+
+# print(FlickrData().searchImageData())

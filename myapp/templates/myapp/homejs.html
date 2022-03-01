@@ -1,6 +1,59 @@
 <script>
+    $(function () {
+        var location_name = $("#locationSearch").val();
+        var user_id = $("#userIdId").val();
+        $.ajax({
+            type: "POST",
+            url: "{% url 'search-images' %}",
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                "page_number": 1,
+                "location_name": location_name,
+                "user_id": user_id,
+
+            },
+            success: function (imageResponse) {
+                var imageData = imageResponse.imageData;
+
+                var html = "";
+                $(imageResponse.imageData).each(function (i, image_url) {
+                    var icon_html = ""
+                    if (image_url[1]) {
+                        icon_html = ` <i id="likedId" icon-att=` + `"` + encodeURI(image_url[0]) + `"` + `
+                                    class="iconFirst fa fa-thumbs-up like-size liked"></i>`
+                    }
+                    else {
+                        icon_html = ` <i id="likedId" icon-att=` + `"` + encodeURI(image_url[0]) + `"` + `
+                                    class="iconFirst fa fa-thumbs-up like-size "></i>`
+                    }
+                    html +=
+                        `<a href="#" class="card mt-3 mb-3" id="imageDataIterDiv">
+                                <div class="content text-center mt-4">`+
+
+                        icon_html +
+                        `</div>
+                                <div id="imageurl" class="image">
+                                    <img src=`+ `"` + encodeURI(image_url[0]) + `"` + ` alt=""/>
+                                </div>
+                         </a>`
+                });
+                $("#imageDataMainDiv").empty().html(html);
+                $("#pageNumber").val(imageResponse.page);
+                $("#nextButton").show()
+                onclickLike()
+
+            }
+        });
+
+
+    });
+
+</script>
+<script>
     $("#searchButton").click(function () {
         var location_name = $("#locationSearch").val();
+        var user_id = $("#userIdId").val();
+
         if (location_name === "") {
             alert("Please Input something on search box")
 
@@ -13,6 +66,7 @@
                     csrfmiddlewaretoken: '{{ csrf_token }}',
                     "page_number": 1,
                     "location_name": location_name,
+                    "user_id": user_id,
 
                 },
                 success: function (imageResponse) {
@@ -20,19 +74,25 @@
 
                     var html = "";
                     $(imageResponse.imageData).each(function (i, image_url) {
+                        var icon_html = ""
+                        if (image_url[1] === true) {
+                            icon_html = ` <i id="likedId" icon-att=` + `"` + encodeURI(image_url[0]) + `"` + `
+                                    class="iconFirst fa fa-thumbs-up like-size liked"></i>`
+                        }
+                        else {
+                            icon_html = ` <i id="likedId" icon-att=` + `"` + encodeURI(image_url[0]) + `"` + `
+                                    class="iconFirst fa fa-thumbs-up like-size "></i>`
+                        }
                         html +=
                             `<a href="#" class="card mt-3 mb-3" id="imageDataIterDiv">
-                                <div class="content text-center mt-4">
-                                <button id="likedButton" bttn-att=`+ `"` + encodeURI(image_url) + `"` + `
-                                class="likedFavButton buttonFirst">
-                                <i id="likedId" icon-att=`+ `"` + encodeURI(image_url) + `"` + `
-                                    class="iconFirst fa fa-thumbs-up like-size "></i>
-                                </button>
-                                </div>
+                                <div class="content text-center mt-4">`+
+                            icon_html +
+                            `</div>
                                 <div id="imageurl" class="image">
-                                    <img src=`+ `"` + encodeURI(image_url) + `"` + ` alt=""/>
+                                    <img src=`+ `"` + encodeURI(image_url[0]) + `"` + ` alt=""/>
                                 </div>
-                             </a>`
+                         </a>`
+                     
                     });
                     $("#imageDataMainDiv").empty().html(html);
                     $("#pageNumber").val(imageResponse.page);
@@ -51,6 +111,7 @@
 <script>
     $(function () {
         $("#nextButton").click(function () {
+            var user_id = $("#userIdId").val();
             var page_number = $("#pageNumber").val();
             var page_number = parseInt(page_number) + 1;
             var location_name = $("#locationSearch").val();
@@ -61,7 +122,8 @@
                 data: {
                     csrfmiddlewaretoken: '{{ csrf_token }}',
                     "page_number": page_number,
-                    "location_name": location_name
+                    "location_name": location_name,
+                    "user_id": user_id
                 },
                 success: function (imageResponse) {
                     if (page_number === imageResponse.total_pages) {
@@ -71,19 +133,25 @@
                     var html = "";
                     var htmlForPageInput = "";
                     $(imageResponse.imageData).each(function (i, image_url) {
+                        var icon_html = ""
+                        if (image_url[1] === true) {
+                            icon_html = ` <i id="likedId" icon-att=` + `"` + encodeURI(image_url[0]) + `"` + `
+                                    class="iconFirst fa fa-thumbs-up like-size liked"></i>`
+                        }
+                        else {
+                            icon_html = ` <i id="likedId" icon-att=` + `"` + encodeURI(image_url[0]) + `"` + `
+                                    class="iconFirst fa fa-thumbs-up like-size "></i>`
+                        }
                         html +=
                             `<a href="#" class="card mt-3 mb-3" id="imageDataIterDiv">
-                                <div class="content text-center mt-4">
-                                <button id="likedButton" bttn-att=`+ `"` + encodeURI(image_url) + `"` + `
-                                class="likedFavButton buttonFirst">
-                                <i id="likedId" icon-att=`+ `"` + encodeURI(image_url) + `"` + `
-                                    class="iconFirst fa fa-thumbs-up like-size "></i>
-                                </button>
-                                </div>
+                                <div class="content text-center mt-4">`+
+                            icon_html +
+                            `</div>
                                 <div id="imageurl" class="image">
-                                    <img src=`+ `"` + encodeURI(image_url) + `"` + ` alt=""/>
+                                    <img src=`+ `"` + encodeURI(image_url[0]) + `"` + ` alt=""/>
                                 </div>
-                                </a>`
+                         </a>`
+                       
                     });
                     $("#imageDataMainDiv").empty().html(html);
                     $("#pageNumber").val(imageResponse.page);
@@ -103,6 +171,7 @@
 <script>
     $(function () {
         $("#previousButton").click(function () {
+            var user_id = $("#userIdId").val();
             var page_number = $("#pageNumber").val()
             var page_number = parseInt(page_number) - 1;
 
@@ -118,7 +187,8 @@
                 data: {
                     csrfmiddlewaretoken: '{{ csrf_token }}',
                     "page_number": page_number,
-                    "location_name": location_name
+                    "location_name": location_name,
+                    "user_id": user_id
                 },
                 success: function (imageResponse) {
                     if (page_number < imageResponse.total_pages) {
@@ -128,19 +198,25 @@
                     var html = "";
                     var htmlForPageInput = "";
                     $(imageResponse.imageData).each(function (i, image_url) {
+                        var icon_html = ""
+                        if (image_url[1] === true) {
+                            icon_html = ` <i id="likedId" icon-att=` + `"` + encodeURI(image_url[0]) + `"` + `
+                                    class="iconFirst fa fa-thumbs-up like-size liked"></i>`
+                        }
+                        else {
+                            icon_html = ` <i id="likedId" icon-att=` + `"` + encodeURI(image_url[0]) + `"` + `
+                                    class="iconFirst fa fa-thumbs-up like-size "></i>`
+                        }
                         html +=
                             `<a href="#" class="card mt-3 mb-3" id="imageDataIterDiv">
-                                <div class="content text-center mt-4">
-                                <button id="likedButton" bttn-att=`+ `"` + encodeURI(image_url) + `"` + `
-                                class="likedFavButton buttonFirst">
-                                <i id="likedId" icon-att=`+ `"` + encodeURI(image_url) + `"` + `
-                                    class="iconFirst fa fa-thumbs-up like-size "></i>
-                                </button>
-                                </div>
+                                <div class="content text-center mt-4">`+
+                            icon_html +
+                            `</div>
                                 <div id="imageurl" class="image">
-                                    <img src=`+ `"` + encodeURI(image_url) + `"` + ` alt=""/>
+                                    <img src=`+ `"` + encodeURI(image_url[0]) + `"` + ` alt=""/>
                                 </div>
-                                </a>`
+                         </a>`
+                       
 
                     });
                     $("#imageDataMainDiv").empty().html(html);
@@ -196,6 +272,7 @@
                     //     "longitude": longitude
                     // },
                     success: function (response) {
+                        var user_id = $("#userIdId").val();
 
                         $("#locationSearch").val(response.location_name);
                         var location_name = $("#locationSearch").val();
@@ -208,6 +285,7 @@
                                     csrfmiddlewaretoken: '{{ csrf_token }}',
                                     "page_number": 1,
                                     "location_name": location_name,
+                                    "user_id": user_id,
 
                                 },
                                 success: function (imageResponse) {
@@ -215,19 +293,26 @@
 
                                     var html = "";
                                     $(imageResponse.imageData).each(function (i, image_url) {
+
+                                        var icon_html = ""
+                                        if (image_url[1] === true) {
+                                            icon_html = ` <i id="likedId" icon-att=` + `"` + encodeURI(image_url[0]) + `"` + `
+                                                            class="iconFirst fa fa-thumbs-up like-size liked"></i>`
+                                        }
+                                        else {
+                                            icon_html = ` <i id="likedId" icon-att=` + `"` + encodeURI(image_url[0]) + `"` + `
+                                                            class="iconFirst fa fa-thumbs-up like-size "></i>`
+                                        }
                                         html +=
                                             `<a href="#" class="card mt-3 mb-3" id="imageDataIterDiv">
-                                                            <div class="content text-center mt-4">
-                                                            <button id="likedButton" bttn-att=`+ `"` + encodeURI(image_url) + `"` + `
-                                                            class="likedFavButton buttonFirst">
-                                                            <i id="likedId" icon-att=`+ `"` + encodeURI(image_url) + `"` + `
-                                                                class="iconFirst fa fa-thumbs-up like-size "></i>
-                                                            </button>
-                                                            </div>
+                                                    <div class="content text-center mt-4">`+
+                                            icon_html +
+                                            `</div>
                                                             <div id="imageurl" class="image">
-                                                                <img src=`+ `"` + encodeURI(image_url) + `"` + ` alt=""/>
+                                                                <img src=`+ `"` + encodeURI(image_url[0]) + `"` + ` alt=""/>
                                                             </div>
-                                                            </a>`
+                                                    </a>`
+                                      
 
                                     });
                                     $("#imageDataMainDiv").empty().html(html);
@@ -281,6 +366,5 @@
 <script>
     $(function () {
         onclickLike()
-
     })
 </script>

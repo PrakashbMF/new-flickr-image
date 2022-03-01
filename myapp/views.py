@@ -94,13 +94,8 @@ class Home(TemplateView):
         context = super().get_context_data(**kwargs)
         name = self.request.user.first_name
         user_id = self.request.user.id
-        flickr_service = FlickrData()
-        image_data, page, total_pages = flickr_service.searchImageData()
         context['name'] = name
         context['user_id'] = user_id
-        context['image_data'] = image_data
-        context['page'] = page
-        context['total_pages'] = total_pages
         return context
 
 
@@ -122,6 +117,21 @@ class FavouriteImage(TemplateView):
         context['user_id'] = user_id
         context['favourite_images'] = favourite_images
         return context
+
+
+class GetFavouriteImages(APIView):
+    """
+              Redirect to requested user favourite page and show liked images if any
+              else show a message
+       """
+
+    def get(self, request, *args, **kwargs):
+        user_id = request.query_params.get("user_id")
+        print(user_id)
+        user = User.objects.get(id=user_id)
+        favourite_images = list(
+            user.favourite_set.all().order_by("-genDate").values_list("image_url", flat=True))
+        return Response({"favourite_images": favourite_images}, status=status.HTTP_200_OK)
 
 
 class LocationList(APIView):
@@ -249,6 +259,7 @@ class SearchImages(APIView):
 
     def post(self, request, *args, **kwargs):
 
+        user_id = request.data["user_id"]
         if request.data['location_name'] == "":
             location_name = None
         else:
@@ -256,6 +267,14 @@ class SearchImages(APIView):
         page_number = request.data['page_number']
         flickr_service = FlickrData()
         image_data, page, total_pages = flickr_service.searchImageData(page_number, location_name)
+        user = User.objects.get(id=user_id)
+        favourite_images = list(
+            user.favourite_set.all().order_by("-genDate").values_list("image_url", flat=True))
+        for x in image_data:
+            if x[0] in favourite_images:
+                x.append(True)
+            else:
+                x.append(False)
 
         return Response(
             {"imageData": image_data, "page": page, "total_pages": total_pages}, status=status.HTTP_200_OK)
