@@ -11,7 +11,7 @@ class FlickrData:
     def searchImageData(self, page=1, search_text=None):
         method = "flickr.photos.search"
         flickr_key = self.flickr_key
-        search_image_link = self.flickr_source_api + "?method={}&api_key={}&text={}&nojsoncallback=1&format=json&extras=url_o&page={}&per_page=5".format(
+        search_image_link = self.flickr_source_api + "?method={}&api_key={}&text={}&nojsoncallback=1&format=json&extras=url_o&page={}&per_page=10".format(
             method, flickr_key, search_text, page)
         # response = self.getFlickrApiCall(search_image_link)
         response = requests.get(search_image_link)
