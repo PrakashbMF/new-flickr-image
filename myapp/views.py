@@ -110,12 +110,8 @@ class FavouriteImage(TemplateView):
         context = super().get_context_data(**kwargs)
         name = self.request.user.first_name
         user_id = self.request.user.id
-        user = User.objects.get(id=user_id)
-        favourite_images = list(
-            user.favourite_set.all().order_by("-genDate").values_list("image_url", flat=True))
         context['name'] = name
         context['user_id'] = user_id
-        context['favourite_images'] = favourite_images
         return context
 
 
@@ -127,7 +123,6 @@ class GetFavouriteImages(APIView):
 
     def get(self, request, *args, **kwargs):
         user_id = request.query_params.get("user_id")
-        print(user_id)
         user = User.objects.get(id=user_id)
         favourite_images = list(
             user.favourite_set.all().order_by("-genDate").values_list("image_url", flat=True))

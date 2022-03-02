@@ -53,32 +53,27 @@
 </div>
 
 <div id="extraImageDataMainDiv">
-    {% if favourite_images %}
     <div class="portfolio px-5" id="imageDataMainDiv">
-        {% for image_url in favourite_images %}
 
         <a href="#" class="card mt-3 mb-3" id="imageDataIterDiv">
             <div class="content text-center mt-4">
 
-                    <i id="likedId" icon-att="{{image_url}}"
-                       class="iconFirst fa fa-thumbs-up like-size liked "></i>
+                <i id="likedId" icon-att="{{image_url}}"
+                   class="iconFirst fa fa-thumbs-up like-size liked "></i>
 
             </div>
             <div id="imageurl" class="image">
                 <img src="{{image_url}}" alt=""/>
             </div>
         </a>
-        {% endfor %}
 
     </div>
-    {% else %}
-    <div id="emptyId">
-        <div class="text-center mt-5">
-            <h1>You have no Favourite Image to Show</h1>
-            <h4 class=" mt-5">Please go <a href="/home">Home</a> and do like to add in your Favourite</h4>
-        </div>
-    </div>
-    {% endif %}
+    <!--    <div id="emptyId">-->
+    <!--        <div class="text-center mt-5">-->
+    <!--            <h1>You have no Favourite Image to Show</h1>-->
+    <!--            <h4 class=" mt-5">Please go <a href="/home">Home</a> and do like to add in your Favourite</h4>-->
+    <!--        </div>-->
+    <!--    </div>-->
 </div>
 {% endif %}
 <script src='https://code.jquery.com/jquery-1.12.4.js'></script>

@@ -1,22 +1,59 @@
 <script>
-
-    $("a").find("i.iconFirst").on("click", function () {
-        let id_val = $(this).attr("icon-att");
-        let user_id = $("#userIdId").val();
-        var this_elemt = $(this)
+    $(function () {
+        var user_id = $("#userIdId").val();
         $.ajax({
-            type: "POST",
-            url: "{% url 'like-unlike' %}",
-            data: {
-                csrfmiddlewaretoken: '{{ csrf_token }}',
-                "image_url": id_val,
-                "user_id": user_id,
-            },
-            success: function (response) {
+            type: "GET",
+            url: `/get-favourite-images/?user_id=${user_id}`,
+            // data: {
+            //     "user_id": user_id,
 
-                this_elemt.closest("#imageDataIterDiv").fadeOut();
+            // },
+            success: function (imageResponse) {
+
+                var html = "";
+                $(imageResponse.favourite_images).each(function (i, image_url) {
+                    html +=
+                        `<a href="#" class="card mt-3 mb-3" id="imageDataIterDiv">
+                                <div class="content text-center mt-4">
+                                     <i id="likedId" icon-att=` + `"` + encodeURI(image_url) + `"` + `
+                                    class="iconFirst fa fa-thumbs-up like-size liked"></i>
+                                </div>
+                                <div id="imageurl" class="image">
+                                    <img src=`+ `"` + encodeURI(image_url) + `"` + ` alt=""/>
+                                </div>
+                         </a>`
+                });
+                $("#imageDataMainDiv").empty().html(html);
+                onClickRemove();
 
             }
         });
+
+
     });
+
+</script>
+
+<script>
+    function onClickRemove() {
+        $("a").find("i.iconFirst").on("click", function () {
+            let id_val = $(this).attr("icon-att");
+            let user_id = $("#userIdId").val();
+            var this_elemt = $(this)
+            $.ajax({
+                type: "POST",
+                url: "{% url 'like-unlike' %}",
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    "image_url": id_val,
+                    "user_id": user_id,
+                },
+                success: function (response) {
+
+                    this_elemt.closest("#imageDataIterDiv").fadeOut();
+
+                }
+            });
+        });
+    };
 </script>
