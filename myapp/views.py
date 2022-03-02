@@ -90,7 +90,7 @@ class Home(TemplateView):
     """
     template_name = "myapp/home.html"
 
-    def get_context_data(self, *args, **kwargs):
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         name = self.request.user.first_name
         user_id = self.request.user.id
@@ -106,7 +106,7 @@ class FavouriteImage(TemplateView):
        """
     template_name = "myapp/favourite.html"
 
-    def get_context_data(self, *args, **kwargs):
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         name = self.request.user.first_name
         user_id = self.request.user.id
