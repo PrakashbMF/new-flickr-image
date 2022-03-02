@@ -50,9 +50,6 @@
                     "phone": phone,
                 },
                 success: function (signup_response) {
-                    console.log(signup_response)
-                    console.log(signup_response.message)
-
                     $("#messageDiv").show()
                     $("#messageDiv").empty().text(signup_response.message)
                 }

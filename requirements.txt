@@ -15,4 +15,4 @@ simplejson==3.17.6
 six==1.16.0
 sqlparse==0.4.2
 urllib3==1.26.8
-django-environ
+django-environ==0.8.1

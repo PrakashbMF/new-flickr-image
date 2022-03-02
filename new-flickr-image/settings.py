@@ -97,8 +97,8 @@ DATABASES = {
         "USER": env("DATABASE_USER"),
         "PASSWORD": env("DATABASE_PASSWORD"),
         "default-character-set": "utf8",
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'HOST': env("HOST"),
+        'PORT': env("PORT"),
     }
 }
 

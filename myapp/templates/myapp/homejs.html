@@ -72,31 +72,46 @@
                 success: function (imageResponse) {
                     var imageData = imageResponse.imageData;
 
-                    var html = "";
-                    $(imageResponse.imageData).each(function (i, image_url) {
-                        var icon_html = ""
-                        if (image_url[1] === true) {
-                            icon_html = ` <i id="likedId" icon-att=` + `"` + encodeURI(image_url[0]) + `"` + `
+
+                    length_image = imageResponse.imageData.length
+                    if (length_image < 1) {
+                        empty_html = `<div id="emptyId">
+                                        <div class="text-center mt-5">
+                                            <h1>No images found on this location</h1>
+                                        </div>
+                                    </div>`
+                        $("#extraImageDataMainDiv").empty().html(empty_html);
+                        $("#nextButton").hide()
+                        $("#previousButton").hide()
+
+                    }
+                    else {
+                        var html = "";
+                        $(imageResponse.imageData).each(function (i, image_url) {
+                            var icon_html = ""
+                            if (image_url[1] === true) {
+                                icon_html = ` <i id="likedId" icon-att=` + `"` + encodeURI(image_url[0]) + `"` + `
                                     class="iconFirst fa fa-thumbs-up like-size liked"></i>`
-                        }
-                        else {
-                            icon_html = ` <i id="likedId" icon-att=` + `"` + encodeURI(image_url[0]) + `"` + `
+                            }
+                            else {
+                                icon_html = ` <i id="likedId" icon-att=` + `"` + encodeURI(image_url[0]) + `"` + `
                                     class="iconFirst fa fa-thumbs-up like-size "></i>`
-                        }
-                        html +=
-                            `<a href="#" class="card mt-3 mb-3" id="imageDataIterDiv">
+                            }
+                            html +=
+                                `<a href="#" class="card mt-3 mb-3" id="imageDataIterDiv">
                                 <div class="content text-center mt-4">`+
-                            icon_html +
-                            `</div>
+                                icon_html +
+                                `</div>
                                 <div id="imageurl" class="image">
                                     <img src=`+ `"` + encodeURI(image_url[0]) + `"` + ` alt=""/>
                                 </div>
                          </a>`
-                     
-                    });
-                    $("#imageDataMainDiv").empty().html(html);
-                    $("#pageNumber").val(imageResponse.page);
-                    onclickLike()
+
+                        });
+                        $("#imageDataMainDiv").empty().html(html);
+                        $("#pageNumber").val(imageResponse.page);
+                        onclickLike()
+                    }
 
                 }
             });
@@ -151,7 +166,7 @@
                                     <img src=`+ `"` + encodeURI(image_url[0]) + `"` + ` alt=""/>
                                 </div>
                          </a>`
-                       
+
                     });
                     $("#imageDataMainDiv").empty().html(html);
                     $("#pageNumber").val(imageResponse.page);
@@ -216,7 +231,7 @@
                                     <img src=`+ `"` + encodeURI(image_url[0]) + `"` + ` alt=""/>
                                 </div>
                          </a>`
-                       
+
 
                     });
                     $("#imageDataMainDiv").empty().html(html);
@@ -312,7 +327,7 @@
                                                                 <img src=`+ `"` + encodeURI(image_url[0]) + `"` + ` alt=""/>
                                                             </div>
                                                     </a>`
-                                      
+
 
                                     });
                                     $("#imageDataMainDiv").empty().html(html);

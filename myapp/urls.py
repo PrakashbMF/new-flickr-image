@@ -1,6 +1,6 @@
 from django.urls import path
 
-from myapp.views import InsertLocation, LikeUnlike, SearchImages, GeoLocationFromLatLong, \
+from myapp.views import LikeUnlike, SearchImages, GeoLocationFromLatLong, \
     CreateUser, Signup, Signin, Home, FavouriteImage, GetLocationByParamAndInsert, SignOut, GetFavouriteImages
 
 urlpatterns = [
@@ -9,7 +9,6 @@ urlpatterns = [
     path('signin/', Signin.as_view(), name="signin"),
     path('home/', Home.as_view(), name="home"),
     path('location-list-insert/', GetLocationByParamAndInsert.as_view(), name='location-list-insert'),
-    path('insert-location/', InsertLocation.as_view(), name="insert-location"),
     path('like-unlike/', LikeUnlike.as_view(), name='like-unlike'),
     path('search-images/', SearchImages.as_view(), name="search-images"),
     path('geolocation/', GeoLocationFromLatLong.as_view(), name='geolocation'),
