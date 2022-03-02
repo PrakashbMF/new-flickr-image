@@ -105,6 +105,15 @@ class Home(TemplateView):
     """
     template_name = "myapp/home.html"
 
+    def dispatch(self, request, *args, **kwargs):
+        """
+            if user done with logout and trying to access again any authorize page
+            then it will redirect user to login page
+        """
+        if not request.user.is_authenticated:
+            return redirect('signin')
+        return super(Home, self).dispatch(self.request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         """
             send context to home html page
@@ -124,19 +133,27 @@ class FavouriteImage(TemplateView):
        """
     template_name = "myapp/favourite.html"
 
+    def dispatch(self, request, *args, **kwargs):
+        """
+            if user done with logout and trying to access again any authorize page
+            then it will redirect user to login page
+        """
+        if not request.user.is_authenticated:
+            return redirect('signin')
+        return super(FavouriteImage, self).dispatch(self.request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         """
             send context to home html page
         """
         context = super().get_context_data(**kwargs)
+        print("request.user", self.request.user)
+        print("request.user", self.request.user.is_authenticated)
         name = self.request.user.first_name
         user_id = self.request.user.id
         context['name'] = name
         context['user_id'] = user_id
         return context
-
-
-from rest_framework.exceptions import APIException
 
 
 class GetFavouriteImages(APIView):

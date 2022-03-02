@@ -10,7 +10,7 @@
 
         if (first_name === "") {
             alert("Please Enter first_name")
-        } 
+        }
         else if (last_name === "") {
             alert("Please Enter last name")
 
@@ -50,6 +50,13 @@
                     "phone": phone,
                 },
                 success: function (signup_response) {
+                    $("#firstnameid").val("")
+                    $("#lastnameid").val("")
+                    $("#emailid").val("")
+                    $("#usernameid").val("")
+                    $("#passwordid").val("")
+                    $("#ageid").val("")
+                    $("#phoneid").val("")
                     $("#messageDiv").show()
                     $("#messageDiv").empty().text(signup_response.message)
                 }

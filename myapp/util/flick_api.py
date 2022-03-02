@@ -38,6 +38,5 @@ class FlickrData:
                     urls.append(url)
                 return urls, page, total_pages
         except Exception as e:
-            return Response({"Error": str(e)})
-
+            return e
 # print(FlickrData().search_image_data())
