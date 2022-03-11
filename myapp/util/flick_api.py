@@ -1,9 +1,7 @@
 import os
-from pathlib import Path
-
 import requests
 import environ
-from rest_framework.response import Response
+from pathlib import Path
 
 env = environ.Env()
 BASE_PATH = Path(__file__).resolve().parent.parent.parent
@@ -39,4 +37,3 @@ class FlickrData:
                 return urls, page, total_pages
         except Exception as e:
             return e
-# print(FlickrData().search_image_data())
