@@ -5,6 +5,10 @@ from .managers import UserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    """
+           User model and its a AbstractBaseUser
+           it holds register user
+    """
     email = models.EmailField(max_length=30, unique=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
@@ -33,6 +37,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Location(models.Model):
+    """
+           Location model where we can store locations
+    """
     STATUS_CHOICES = (
         ("Y", "Yes"), ("N", "No")
     )
@@ -45,6 +52,9 @@ class Location(models.Model):
 
 
 class Favourite(models.Model):
+    """
+           Favourite model where we can store liked images
+    """
     STATUS_CHOICES = (
         ("Y", "Yes"), ("N", "No")
     )
