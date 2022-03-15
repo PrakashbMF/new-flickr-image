@@ -1,14 +1,18 @@
+"""This is for URL Traversal """
+
 from django.urls import path
 
 from myapp.views import LikeUnlike, SearchImages, GeoLocationFromLatLong, \
-    CreateUser, Signup, Signin, Home, FavouriteImage, GetLocationByParamAndInsert, SignOut, GetFavouriteImages
+    CreateUser, Signup, Signin, Home, FavouriteImage, \
+    GetLocationByParamAndInsert, SignOut, GetFavouriteImages
 
 urlpatterns = [
     path('signup/', Signup.as_view(), name="signup"),
     path('create-user/', CreateUser.as_view(), name="create-user"),
     path('signin/', Signin.as_view(), name="signin"),
     path('home/', Home.as_view(), name="home"),
-    path('location-list-insert/', GetLocationByParamAndInsert.as_view(), name='location-list-insert'),
+    path('location-list-insert/', GetLocationByParamAndInsert.as_view(),
+         name='location-list-insert'),
     path('like-unlike/', LikeUnlike.as_view(), name='like-unlike'),
     path('search-images/', SearchImages.as_view(), name="search-images"),
     path('geolocation/', GeoLocationFromLatLong.as_view(), name='geolocation'),

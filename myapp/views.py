@@ -1,7 +1,9 @@
+"""
+    views model
+"""
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect
-# Create your views here.
 from django.utils import timezone
 from django.views.generic.base import TemplateView
 from rest_framework import status
@@ -9,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from myapp.forms import UserForm, UserSigninForm
-#
+
 from myapp.models import Location, Favourite, User
 from myapp.util.flick_api import FlickrData
 from myapp.util.service import GeoLocation
@@ -47,7 +49,6 @@ class Signin(TemplateView):
         context['user_signin_form'] = user_signin_form
         return context
 
-    # ==================================
     def post(self, request, *args, **kwargs):
         """
             On correct email and password render to home page
@@ -58,10 +59,13 @@ class Signin(TemplateView):
         user = authenticate(email=email, password=password)
         if user is not None:
             login(request, user)
-            return redirect("home")
+            # return redirect("home")
+            response = redirect("home")
         else:
             messages.error(request, "Bad Credentials !!")
-            return redirect('signin')
+            # return redirect('signin')
+            response = redirect('signin')
+        return response
 
 
 class CreateUser(APIView):
@@ -72,7 +76,8 @@ class CreateUser(APIView):
 
     def post(self, request, *args, **kwargs):
         """
-            Account will create successfully if every data valid to Signup and response as successful
+            Account will create successfully if every data valid to Signup and
+            response as successful
             else error response will display
 
             method type : post
@@ -87,11 +92,13 @@ class CreateUser(APIView):
         user_form = UserForm(request.POST)
         if user_form.is_valid():
             try:
-                user = User.objects.create_user(first_name=first_name, last_name=last_name, email=email, phone=phone,
+                user = User.objects.create_user(first_name=first_name,
+                                                last_name=last_name, email=email, phone=phone,
                                                 age=age)
                 user.set_password(password)
                 user.save()
-                return Response({"message": "Account has created successfully"}, status=status.HTTP_201_CREATED)
+                return Response({"message": "Account has created successfully"},
+                                status=status.HTTP_201_CREATED)
             except Exception as e:
                 return Response({"Error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
@@ -176,10 +183,9 @@ class GetFavouriteImages(APIView):
             user_id = request.query_params.get("user_id")
             user = User.objects.get(id=user_id)
             favourite_images = list(
-                user.favourite_set.all().order_by("-genDate").values_list("image_url", flat=True))
-            return Response({"favourite_images": favourite_images}, status=status.HTTP_200_OK)
-        except User.DoesNotExist:
-            return Response({"User": "No user available"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                user.favourite_set.all().order_by("-gen_date").values_list("image_url", flat=True))
+            return Response({"favourite_images": favourite_images},
+                            status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"Error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             # return APIException(e)
@@ -203,7 +209,8 @@ class LocationList(APIView):
         """
         try:
             search_term = request.query_params.get("term")
-            location_names = list(Location.objects.filter(name__contains=search_term).values_list("name", flat=True))
+            location_names = list(Location.objects.filter(name__contains=search_term)
+                                  .values_list("name", flat=True))
             return Response(location_names, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"Error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -211,14 +218,16 @@ class LocationList(APIView):
 
 class GeoLocationFromLatLong(APIView):
     """
-           Return location name by longitude and latitude and if location present in db then return that location name
+           Return location name by longitude and latitude and if location
+           present in db then return that location name
            else insert in db ,if any error happen in this process will give Exception
 
     """
 
     def get(self, request, *args, **kwargs):
         """
-               Return location name by longitude and latitude and if location present in db then return that location name
+               Return location name by longitude and latitude and if location present
+               in db then return that location name
                or insert in db else return error if any
 
                 method type : get
@@ -234,9 +243,10 @@ class GeoLocationFromLatLong(APIView):
             geo_location_service = GeoLocation()
             location_name = geo_location_service.get_geo_location(latitude, longitude)
 
-            searched_item = list(Location.objects.filter(name=location_name).values_list("name", flat=True))
+            searched_item = list(Location.objects.filter(name=location_name)
+                                 .values_list("name", flat=True))
             if not searched_item:
-                Location.objects.create(name=location_name, genDate=timezone.now())
+                Location.objects.create(name=location_name, gen_date=timezone.now())
             return Response({"location_name": location_name}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"Error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -268,13 +278,14 @@ class LikeUnlike(APIView):
             object_data, status_data = Favourite.objects.get_or_create(
                 image_url=image_url,
                 user_id=user_id,
-                defaults={"genDate": timezone.now(), }
+                defaults={"gen_date": timezone.now(), }
             )
             if status_data is False:
                 object_data.delete()
             return Response(status.HTTP_200_OK)
         except Exception as e:
-            return Response({"Error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"Error": str(e)},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class GetLocationByParamAndInsert(APIView):
@@ -295,11 +306,12 @@ class GetLocationByParamAndInsert(APIView):
         """
         try:
             search_term = request.query_params.get("term")
-            searched_items = list(Location.objects.filter(name__contains=search_term).values_list("name", flat=True))
+            searched_items = list(Location.objects.filter(name__contains=search_term)
+                                  .values_list("name", flat=True))
             if searched_items:
                 return Response(searched_items, status=status.HTTP_200_OK)
             else:
-                Location.objects.create(name=search_term, genDate=timezone.now())
+                Location.objects.create(name=search_term, gen_date=timezone.now())
                 searched_items.append(search_term)
                 return Response(searched_items, status=status.HTTP_200_OK)
         except Exception as e:
@@ -332,19 +344,19 @@ class SearchImages(APIView):
                 location_name = request.data['location_name']
             page_number = request.data['page_number']
             flickr_service = FlickrData()
-            image_data, page, total_pages = flickr_service.search_image_data(page_number, location_name)
+            image_data, page, total_pages = flickr_service.search_image_data(page_number,
+                                                                             location_name)
             user = User.objects.get(id=user_id)
             favourite_images = list(
-                user.favourite_set.all().order_by("-genDate").values_list("image_url", flat=True))
+                user.favourite_set.all().order_by("-gen_date").values_list("image_url", flat=True))
             for image in image_data:
                 if image[0] in favourite_images:
                     image.append(True)
                 else:
                     image.append(False)
             return Response(
-                {"imageData": image_data, "page": page, "total_pages": total_pages}, status=status.HTTP_200_OK)
-        except User.DoesNotExist:
-            return Response({"User": "No user Available"}, status=status.HTTP_404_NOT_FOUND)
+                {"imageData": image_data, "page": page, "total_pages": total_pages},
+                status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"Error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

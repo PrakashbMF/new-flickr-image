@@ -1,3 +1,5 @@
+"""This model represents Database table """
+
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
@@ -6,8 +8,7 @@ from .managers import UserManager
 
 class User(AbstractBaseUser, PermissionsMixin):
     """
-           User model and its a AbstractBaseUser
-           it holds register user
+        User model, and it is an AbstractBaseUser.it holds registered user
     """
     email = models.EmailField(max_length=30, unique=True)
     first_name = models.CharField(max_length=30, blank=True)
@@ -24,16 +25,19 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
+    def get_full_name(self):
+        """
+            Returns the first_name plus the last_name, with a space in between.
+        """
+        full_name = f'{self.first_name} {self.last_name}'
+        return full_name.strip()
+
     class Meta:
+        """
+            metaclass for user
+        """
         verbose_name = 'user'
         verbose_name_plural = 'users'
-
-    def get_full_name(self):
-        '''
-        Returns the first_name plus the last_name, with a space in between.
-        '''
-        full_name = '%s %s' % (self.first_name, self.last_name)
-        return full_name.strip()
 
 
 class Location(models.Model):
@@ -44,11 +48,11 @@ class Location(models.Model):
         ("Y", "Yes"), ("N", "No")
     )
     name = models.CharField(max_length=100)
-    genDate = models.DateTimeField()
+    gen_date = models.DateTimeField()
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default="Y")
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
 class Favourite(models.Model):
@@ -60,5 +64,5 @@ class Favourite(models.Model):
     )
     image_url = models.URLField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    genDate = models.DateTimeField()
+    gen_date = models.DateTimeField()
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default="Y")

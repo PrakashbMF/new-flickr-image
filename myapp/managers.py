@@ -1,7 +1,12 @@
+"""This is for  BaseUserManager to control user model """
+
 from django.contrib.auth.base_user import BaseUserManager
 
 
 class UserManager(BaseUserManager):
+    """
+        this is userManager to handle extended User model
+    """
     use_in_migrations = True
 
     def _create_user(self, email, password, **extra_fields):
@@ -18,10 +23,16 @@ class UserManager(BaseUserManager):
         return user
 
     def create_user(self, email, password=None, **extra_fields):
+        """
+            Creates a SuperUser with the given email and password.
+        """
         extra_fields.setdefault('is_superuser', False)
         return self._create_user(email, password, **extra_fields)
 
     def create_superuser(self, email, password, **extra_fields):
+        """
+                set user as superuser.
+        """
         extra_fields.setdefault('is_superuser', True)
 
         if extra_fields.get('is_superuser') is not True:
